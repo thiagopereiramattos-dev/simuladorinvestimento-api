@@ -10,16 +10,14 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
 
     @Override
     public Produto buscarPorTipo(String tipoProduto) {
-//        ProdutoEntity entity = ProdutoEntity.find("tipo", tipoProduto).firstResult();
-//
-//        return new Produto(
-//                entity.id,
-//                entity.nome,
-//                entity.tipo,
-//                entity.rentabilidade,
-//                entity.risco
-//        );
 
-        return null;
+        ProdutoEntity entity = ProdutoEntity.find("tipo", tipoProduto).firstResult();
+        return new Produto(
+                entity.getId(),
+                entity.getNome(),
+                entity.getTipo(),
+                entity.getRentabilidade(),
+                entity.getRisco()
+        );
     }
 }

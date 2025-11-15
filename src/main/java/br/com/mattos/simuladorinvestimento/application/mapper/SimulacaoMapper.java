@@ -19,23 +19,23 @@ public class SimulacaoMapper {
     public SimularInvestimentoResponseDTO toResponse(Simulacao simulacao) {
 
         ProdutoSimulacaoDTO produto = new ProdutoSimulacaoDTO(
-                simulacao.getProduto().getId(),
-                simulacao.getProduto().getNome(),
-                simulacao.getProduto().getTipo(),
-                simulacao.getProduto().getRentabilidade(),
-                simulacao.getProduto().getRisco()
+                simulacao.produto().id(),
+                simulacao.produto().nome(),
+                simulacao.produto().tipo(),
+                simulacao.produto().rentabilidade(),
+                simulacao.produto().risco()
         );
 
         ResultadoSimulacaoDTO resultado = new ResultadoSimulacaoDTO(
-                simulacao.getResultado().getValorFinal(),
-                simulacao.getResultado().getRentabilidadeEfetiva(),
-                simulacao.getResultado().getPrazoMeses()
+                simulacao.resultado().valorFinal(),
+                simulacao.resultado().rentabilidadeEfetiva(),
+                simulacao.resultado().prazoMeses()
         );
 
         return new SimularInvestimentoResponseDTO(
                 produto,
                 resultado,
-                simulacao.getDataSimulacao().toString()
+                simulacao.dataSimulacao().toString()
         );
     }
 }

@@ -13,14 +13,13 @@ public class SimulacaoService {
 
     public Simulacao simular(SimulacaoEntrada entrada) {
 
-        Produto produto = produtoRepository.buscarPorTipo(entrada.getTipoProduto());
-
-        Double valorFinal = entrada.getValor() * (1 + produto.getRentabilidade());
+        Produto produto = produtoRepository.buscarPorTipo(entrada.tipoProduto());
+        Double valorFinal = entrada.valor() * (1 + produto.rentabilidade());
 
         ResultadoSimulacao resultado = new ResultadoSimulacao(
                 valorFinal,
-                produto.getRentabilidade(),
-                entrada.getPrazoMeses()
+                produto.rentabilidade(),
+                entrada.prazoMeses()
         );
 
         return new Simulacao(produto, resultado);

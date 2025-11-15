@@ -11,6 +11,6 @@ public class GreetingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "Hello from Quarkus REST Thiago";
+        return " Thiago Pereira de Mattos - TESTE!!!!!";
     }
 }

@@ -1,4 +1,4 @@
-package br.com.mattos.simuladorinvestimento.application.controller;
+package br.com.mattos.simuladorinvestimento.application.resource;
 
 import br.com.mattos.simuladorinvestimento.application.dto.*;
 import br.com.mattos.simuladorinvestimento.application.mapper.SimulacaoMapper;
