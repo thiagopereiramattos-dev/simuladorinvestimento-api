@@ -6,38 +6,35 @@ import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.Pro
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper.ProdutoMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class ProdutoRepositoryImpl implements ProdutoRepository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProdutoRepositoryImpl.class);
 
     @Inject
     ProdutoMapper mapper;
 
     @Override
-    public Produto buscarPorTipo(String tipoProduto) {
-        ProdutoEntity entity = ProdutoEntity.find("tipo.nome", tipoProduto).firstResult();
+    public Optional<Produto> buscarPorTipo(String tipoProduto) {
+        LOGGER.debug("Buscando produto pelo tipo: {}", tipoProduto);
+        ProdutoEntity entity =
+                ProdutoEntity.find("tipo.nome", tipoProduto).firstResult();
 
-        if (entity == null) {
-            throw new IllegalArgumentException("Produto do tipo '" + tipoProduto + "' não encontrado.");
-        }
-
-        return mapper.toDomain(entity);
+        return Optional.ofNullable(mapper.toDomain(entity));
     }
+
 
     @Override
     public List<Produto> listarTodos() {
+        LOGGER.debug("Buscando todos produtos no banco");
         return ProdutoEntity.findAll().<ProdutoEntity>list()
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
-
-//    @Override
-//    public List<Produto> listarTodos() {
-//        return ProdutoEntity.listAll().stream()
-//                .map(mapper::toDomain)
-//                .collect(Collectors.toList());
-//    }
 }

@@ -7,11 +7,15 @@ import br.com.mattos.simuladorinvestimento.domain.service.ProdutoService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/produtos")
 @Consumes("application/json")
 @Produces("application/json")
 public class ProdutoResource {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProdutoResource.class);
 
     @Inject
     ProdutoService produtoService;
@@ -21,7 +25,9 @@ public class ProdutoResource {
 
     @GET
     public List<ProdutoResponseDTO> listar() {
+        LOGGER.info("Requisição recebida: listar todos produtos");
         List<Produto> produtos = produtoService.listarTodos();
+        LOGGER.info("Retornando {} produtos", produtos.size());
         return mapper.toResponseList(produtos);
     }
 }
