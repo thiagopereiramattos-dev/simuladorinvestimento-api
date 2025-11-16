@@ -1,41 +1,26 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "produto")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SequenceGenerator(
-        name = "produtoSeq",
-        sequenceName = "produto_seq",
-        initialValue = 1,
-        allocationSize = 1
-)
-public class ProdutoEntity extends PanacheEntityBase {
+public class ProdutoEntity extends PanacheEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "produtoSeq")
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "nome_produto", nullable = false)
+    public String nome;
 
-    @Column(name = "nome_produto")
-    private String nome;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_produto_id", nullable = false)
+    public TipoProdutoEntity tipo;
 
-    @Column(name = "tipo_produto")
-    private String tipo;
+    @Column(name = "taxa_rentabilidade", nullable = false)
+    public Double rentabilidade;
 
-    @Column(name = "taxa_rentabilidade")
-    private Double rentabilidade;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "risco_id", nullable = false)
+    public RiscoEntity risco;
 
-    @Column(name = "nivel_risco")
-    private String risco;
+    @Column(name = "descricao")
+    public String descricao;
 }

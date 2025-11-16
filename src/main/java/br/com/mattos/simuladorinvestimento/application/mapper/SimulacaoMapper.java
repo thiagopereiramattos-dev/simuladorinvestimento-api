@@ -1,6 +1,9 @@
 package br.com.mattos.simuladorinvestimento.application.mapper;
 
-import br.com.mattos.simuladorinvestimento.application.dto.*;
+import br.com.mattos.simuladorinvestimento.application.dto.request.SimularInvestimentoRequestDTO;
+import br.com.mattos.simuladorinvestimento.application.dto.response.ProdutoSimulacaoResponseDTO;
+import br.com.mattos.simuladorinvestimento.application.dto.response.ResultadoSimulacaoResponseDTO;
+import br.com.mattos.simuladorinvestimento.application.dto.response.SimularInvestimentoResponseDTO;
 import br.com.mattos.simuladorinvestimento.domain.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -18,7 +21,7 @@ public class SimulacaoMapper {
 
     public SimularInvestimentoResponseDTO toResponse(Simulacao simulacao) {
 
-        ProdutoSimulacaoDTO produto = new ProdutoSimulacaoDTO(
+        ProdutoSimulacaoResponseDTO produto = new ProdutoSimulacaoResponseDTO(
                 simulacao.produto().id(),
                 simulacao.produto().nome(),
                 simulacao.produto().tipo(),
@@ -26,7 +29,7 @@ public class SimulacaoMapper {
                 simulacao.produto().risco()
         );
 
-        ResultadoSimulacaoDTO resultado = new ResultadoSimulacaoDTO(
+        ResultadoSimulacaoResponseDTO resultado = new ResultadoSimulacaoResponseDTO(
                 simulacao.resultado().valorFinal(),
                 simulacao.resultado().rentabilidadeEfetiva(),
                 simulacao.resultado().prazoMeses()

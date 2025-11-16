@@ -1,6 +1,7 @@
 package br.com.mattos.simuladorinvestimento.application.resource;
 
-import br.com.mattos.simuladorinvestimento.application.dto.*;
+import br.com.mattos.simuladorinvestimento.application.dto.request.SimularInvestimentoRequestDTO;
+import br.com.mattos.simuladorinvestimento.application.dto.response.SimularInvestimentoResponseDTO;
 import br.com.mattos.simuladorinvestimento.application.mapper.SimulacaoMapper;
 import br.com.mattos.simuladorinvestimento.domain.service.SimulacaoService;
 import jakarta.inject.Inject;
