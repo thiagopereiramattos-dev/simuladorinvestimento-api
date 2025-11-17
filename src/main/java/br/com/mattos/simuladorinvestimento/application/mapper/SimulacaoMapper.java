@@ -19,7 +19,7 @@ public class SimulacaoMapper {
         );
     }
 
-    public SimularInvestimentoResponseDTO toResponse(Simulacao simulacao) {
+    public SimularInvestimentoResponseDTO toResponse(SimulacaoInvestimento simulacao) {
 
         ProdutoSimulacaoResponseDTO produto = new ProdutoSimulacaoResponseDTO(
                 simulacao.produto().id(),

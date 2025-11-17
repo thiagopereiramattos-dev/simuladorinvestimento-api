@@ -19,20 +19,20 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
     @Inject
     ProdutoMapper mapper;
 
+    @Inject
+    ProdutoPanacheRepository panacheRepo;
+
     @Override
     public Optional<Produto> buscarPorTipo(String tipoProduto) {
         LOGGER.debug("Buscando produto pelo tipo: {}", tipoProduto);
-        ProdutoEntity entity =
-                ProdutoEntity.find("tipo.nome", tipoProduto).firstResult();
-
+        ProdutoEntity entity = panacheRepo.find("tipo.nome", tipoProduto).firstResult();
         return Optional.ofNullable(mapper.toDomain(entity));
     }
-
 
     @Override
     public List<Produto> listarTodos() {
         LOGGER.debug("Buscando todos produtos no banco");
-        return ProdutoEntity.findAll().<ProdutoEntity>list()
+        return panacheRepo.listAll()
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

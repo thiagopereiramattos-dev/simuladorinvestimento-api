@@ -1,26 +1,36 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "produto")
-public class ProdutoEntity extends PanacheEntity {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProdutoEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "nome_produto", nullable = false)
-    public String nome;
+    private String nome;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_produto_id", nullable = false)
-    public TipoProdutoEntity tipo;
+    private TipoProdutoEntity tipo;
 
     @Column(name = "taxa_rentabilidade", nullable = false)
-    public Double rentabilidade;
+    private Double rentabilidade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "risco_id", nullable = false)
-    public RiscoEntity risco;
+    private RiscoEntity risco;
 
     @Column(name = "descricao")
-    public String descricao;
+    private String descricao;
 }
+

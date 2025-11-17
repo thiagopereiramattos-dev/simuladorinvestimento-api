@@ -4,21 +4,25 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "risco")
+@Table(name = "cliente")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RiscoEntity {
+public class ClienteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nivel", unique = true, nullable = false)
-    private String nivel;
+    @Column(name = "nome", nullable = false)
+    private String nome;
 
-    @Column(name = "descricao")
-    private String descricao;
+    @Column(name = "cpf", nullable = false)
+    private Long cpf;
+
+    @Column(name = "email")
+    private String email;
 }
+

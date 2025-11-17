@@ -1,15 +1,24 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "tipo_produto")
-public class TipoProdutoEntity extends PanacheEntity {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class TipoProdutoEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "nome", unique = true, nullable = false)
-    public String nome;
+    private String nome;
 
     @Column(name = "descricao")
-    public String descricao;
+    private String descricao;
 }
