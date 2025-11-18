@@ -11,9 +11,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
+/**
+ * Mapper de exceção para tratar JSON sintaticamente correto, mas com tipos de campos incorretos.
+ * <p>
+ * Exemplo: enviar "clienteId": "29A" quando o campo é definido como Integer.
+ * </p>
+ * <p>
+ * Retorna status HTTP 400 (Bad Request) com detalhes do campo que gerou o erro.
+ * A resposta segue o padrão {@link ApiErrorResponseDet} e inclui {@link CampoErro}.
+ * </p>
+ */
 @Provider
-public class JsonMappingExceptionMapper extends BaseExceptionHandler
-        implements ExceptionMapper<MismatchedInputException> {
+public class JsonMappingExceptionMapper extends BaseExceptionHandler implements ExceptionMapper<MismatchedInputException> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonMappingExceptionMapper.class);
 

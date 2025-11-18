@@ -4,6 +4,13 @@ import br.com.mattos.simuladorinvestimento.domain.enums.PerfilRiscoCliente;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Representa um cliente do sistema de simulação de investimentos.
+ * <p>
+ * Esta entidade é mapeada para a tabela {@code cliente} no banco de dados.
+ * Contém informações básicas do cliente, como nome, CPF, e-mail, perfil de risco e senha criptografada.
+ * </p>
+ */
 @Entity
 @Table(name = "cliente")
 @Getter

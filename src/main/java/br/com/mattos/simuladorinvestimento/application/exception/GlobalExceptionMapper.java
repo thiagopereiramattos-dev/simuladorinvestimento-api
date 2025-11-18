@@ -10,6 +10,19 @@ import jakarta.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Mapper global para capturar todas as exceções não tratadas na API.
+ * <p>
+ * Este mapper realiza:
+ * <ul>
+ *   <li>Tratamento de {@link NotFoundException}: retorna status 404 (Not Found) com mensagem padrão {@link ErrorType#RECURSO_NAO_ENCONTRADO}.</li>
+ *   <li>Tratamento de exceções inesperadas: retorna status 500 (Internal Server Error) com mensagem padrão {@link ErrorType#ERRO_INTERNO}.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Todas as respostas seguem o padrão {@link ApiErrorResponse}.
+ * </p>
+ */
 @Provider
 public class GlobalExceptionMapper extends BaseExceptionHandler implements ExceptionMapper<Throwable> {
 

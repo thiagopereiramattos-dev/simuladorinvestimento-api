@@ -15,6 +15,12 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * Serviço responsável pela simulação de investimentos.
+ * <p>
+ * Realiza cálculos de simulação, persiste resultados e consulta a listaa de simulações existentes.
+ * </p>
+ */
 @ApplicationScoped
 public class SimulacaoService {
 
@@ -26,41 +32,76 @@ public class SimulacaoService {
     @Inject
     SimulacaoInvestimentoRepository simulacaoInvestimentoRepository;
 
+    /**
+     * Realiza uma simulação de investimento para um cliente.
+     * <p>
+     * Busca o produto pelo tipo informado na entrada da simulação,
+     * calcula o valor final baseado na rentabilidade do produto e cria
+     * um objeto {@link SimulacaoInvestimento}, que será persistido no repositório.
+     * </p>
+     *
+     * @param entrada dados da simulação fornecidos pelo {@link SimulacaoEntrada}
+     * @return um objeto {@link SimulacaoInvestimento} com o resultado da simulação
+     * @throws ProdutoNaoEncontradoException caso não exista produto do tipo informado
+     * @throws RuntimeException caso ocorra algum problema ao persistir a simulação
+     */
     public SimulacaoInvestimento simular(SimulacaoEntrada entrada) {
+        try {
+            LOGGER.info("Iniciando simulação para clienteId={} e tipoProduto={}", entrada.clienteId(), entrada.tipoProduto());
 
-        LOGGER.info("Iniciando simulação para clienteId={} e tipoProduto={}", entrada.clienteId(), entrada.tipoProduto());
+            Produto produto = produtoRepository.buscarPorTipo(entrada.tipoProduto())
+                    .orElseThrow(() -> {
+                        LOGGER.warn("Produto do tipo '{}' não encontrado para clienteId={}", entrada.tipoProduto(), entrada.clienteId());
+                        return new ProdutoNaoEncontradoException(entrada.tipoProduto());
+                    });
+            LOGGER.debug("Produto encontrado: id={}, nome={}, rentabilidade={}", produto.id(), produto.nome(), produto.rentabilidade());
 
-        Produto produto = produtoRepository.buscarPorTipo(entrada.tipoProduto())
-                .orElseThrow(() -> {
-                    LOGGER.warn("Produto do tipo '{}' não encontrado para clienteId={}", entrada.tipoProduto(), entrada.clienteId());
-                    return new ProdutoNaoEncontradoException(entrada.tipoProduto());
-                });
-        LOGGER.debug("Produto encontrado: id={}, nome={}, rentabilidade={}", produto.id(), produto.nome(), produto.rentabilidade());
+            Double valorFinal = entrada.valor() * (1 + produto.rentabilidade());
 
-        Double valorFinal = entrada.valor() * (1 + produto.rentabilidade());
+            ResultadoSimulacao resultado = new ResultadoSimulacao(
+                    valorFinal,
+                    produto.rentabilidade(),
+                    entrada.prazoMeses()
+            );
 
-        ResultadoSimulacao resultado = new ResultadoSimulacao(
-                valorFinal,
-                produto.rentabilidade(),
-                entrada.prazoMeses()
-        );
+            LOGGER.info("Resultado da simulação calculado: valorFinal={}, rentabilidade={}, prazoMeses={}",
+                    resultado.valorFinal(),
+                    resultado.rentabilidadeEfetiva(),
+                    resultado.prazoMeses());
 
-        LOGGER.info("Resultado da simulação calculado: valorFinal={}, rentabilidade={}, prazoMeses={}", resultado.valorFinal(), resultado.rentabilidadeEfetiva(), resultado.prazoMeses());
+            SimulacaoInvestimento simulacao = new SimulacaoInvestimento(
+                    null, // id será gerado ao persistir
+                    entrada.clienteId(),
+                    produto,
+                    resultado,
+                    Instant.now()
+            );
 
-        SimulacaoInvestimento simulacao = new SimulacaoInvestimento(
-                null, //id vai ger gerado na simulacao salvar
-                entrada.clienteId(),
-                produto,
-                resultado,
-                Instant.now()
-        );
+            simulacaoInvestimentoRepository.salvar(simulacao);
+            LOGGER.info("Simulação persistida com sucesso para clienteId={} e produto={}", entrada.clienteId(), produto.nome());
 
-        simulacaoInvestimentoRepository.salvar(simulacao);
-        LOGGER.info("Simulação persistida com sucesso para clienteId={} e produto={}", entrada.clienteId(), produto.nome());
-        return simulacao;
+            return simulacao;
+
+        } catch (ProdutoNaoEncontradoException e) {
+            throw e; // mantém a exceção específica
+        } catch (Exception e) {
+            LOGGER.error("Erro ao simular investimento para clienteId={}", entrada.clienteId(), e);
+            throw new RuntimeException("Não foi possível realizar a simulação. Ocorreu um erro interno.", e);
+        }
     }
 
+    /**
+     * Lista todas as simulações de investimento realizadas.
+     *
+     * @return lista de {@link SimulacaoInvestimento} contendo todas as simulações persistidas
+     * @throws RuntimeException caso ocorra algum problema ao acessar o repositório
+     */
     public List<SimulacaoInvestimento> listarSimulacoes() {
-        return simulacaoInvestimentoRepository.listar();
+        try {
+            return simulacaoInvestimentoRepository.listar();
+        } catch (Exception e) {
+            LOGGER.error("Erro ao listar simulações", e);
+            throw new RuntimeException("Não foi possível listar as simulações. Ocorreu um erro interno.", e);
+        }
     }
 }

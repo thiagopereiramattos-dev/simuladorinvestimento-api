@@ -10,8 +10,23 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Optional;
 
 @ApplicationScoped
+
+/**
+ * Mapper responsável por converter entre a entidade {@link ProdutoEntity} e o objeto de domínio {@link Produto}.
+ * <p>
+ * Trata validações básicas, como risco e tipo do produto, lançando exceções caso valores obrigatórios não estejam definidos.
+ * </p>
+ */
 public class ProdutoMapper {
 
+
+    /**
+     * Converte uma entidade {@link ProdutoEntity} em um objeto de domínio {@link Produto}.
+     *
+     * @param entity a entidade a ser convertida
+     * @return objeto de domínio equivalente, ou {@code null} se a entidade for {@code null}
+     * @throws ProdutoInvalidoException se o tipo ou risco do produto não estiver definido
+     */
     public Produto toDomain(ProdutoEntity entity) {
 
         if (entity == null) {
@@ -37,6 +52,13 @@ public class ProdutoMapper {
     }
 
 
+    /**
+     * Converte um objeto de domínio {@link Produto} em uma entidade {@link ProdutoEntity}.
+     *
+     * @param produto objeto de domínio a ser convertido
+     * @return entidade equivalente pronta para persistência, ou {@code null} se o objeto for {@code null}
+     * @throws ProdutoInvalidoException se o risco do produto for inválido
+     */
     public ProdutoEntity toEntity(Produto produto) {
 
         if (produto == null) {

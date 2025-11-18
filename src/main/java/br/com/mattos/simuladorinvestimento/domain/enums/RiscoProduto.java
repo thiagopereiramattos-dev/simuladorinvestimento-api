@@ -1,5 +1,8 @@
 package br.com.mattos.simuladorinvestimento.domain.enums;
 
+/**
+ * Enum que representa o nível de risco de um produto.
+ */
 public enum RiscoProduto {
     BAIXO("Baixo"),
     MEDIO("Médio"),

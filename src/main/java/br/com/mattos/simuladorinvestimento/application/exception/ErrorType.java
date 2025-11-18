@@ -1,5 +1,9 @@
 package br.com.mattos.simuladorinvestimento.application.exception;
 
+/**
+ * Enumeração que define os tipos de erro padronizados na API.
+ * Cada tipo possui uma mensagem padrão que pode ser utilizada nas respostas de erro.
+ */
 public enum ErrorType {
 
     VALIDACAO("Erro de validação nos campos da requisição."),

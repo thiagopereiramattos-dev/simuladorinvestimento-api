@@ -12,6 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Implementação do repositório {@link SimulacaoInvestimentoRepository} usando PanacheRepository
+ * e {@link SimulacaoMapper} para conversão entre entidades e objetos de domínio.
+ * <p>
+ * Responsável por salvar e listar simulações de investimento.
+ * </p>
+ */
 @ApplicationScoped
 public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestimentoRepository {
 
@@ -23,6 +30,11 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
     @Inject
     SimulacaoMapper mapper;
 
+    /**
+     * Persiste uma simulação de investimento no banco de dados.
+     *
+     * @param simulacao objeto de domínio da simulação
+     */
     @Transactional
     @Override
     public void salvar(SimulacaoInvestimento simulacao) {
@@ -33,6 +45,11 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
         LOGGER.info("Simulação salva com sucesso: id={}", entity.getId());
     }
 
+    /**
+     * Lista todas as simulações de investimento.
+     *
+     * @return lista de simulações no domínio
+     */
     public List<SimulacaoInvestimento> listar() {
         return panacheRepo.listAll()
                 .stream()

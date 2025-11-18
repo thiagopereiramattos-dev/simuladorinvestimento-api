@@ -28,6 +28,12 @@ public class SimulacaoInvestimentoResource {
     @Inject
     SimulacaoMapper mapper;
 
+    /**
+     * Endpoint para simular um investimento.
+     *
+     * @param request {@link SimularInvestimentoRequestDTO} DTO com os dados da simulação (cliente, valor, prazo e tipo de produto)
+     * @return {@link SimularInvestimentoResponseDTO} DTO com os resultados da simulação
+     */
     @POST
     @Path("/simular-investimento")
     public SimularInvestimentoResponseDTO simular(@Valid SimularInvestimentoRequestDTO request) {
@@ -42,6 +48,11 @@ public class SimulacaoInvestimentoResource {
         return mapper.toResponse(simulacao);
     }
 
+    /**
+     * Endpoint para listar todas as simulações realizadas.
+     *
+     * @return Lista de {@link SimulacaoListResponseDTO} com informações resumidas das simulações
+     */
     @GET
     @Path("/simulacoes")
     public List<SimulacaoListResponseDTO> listar() {

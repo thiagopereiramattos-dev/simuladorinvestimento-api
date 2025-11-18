@@ -5,6 +5,15 @@ import lombok.*;
 
 import java.time.Instant;
 
+
+/**
+ * Representa uma simulação de investimento do sistema.
+ * <p>
+ * Esta entidade é mapeada para a tabela {@code simulacao_investimento} no banco de dados.
+ * Contém informações sobre o cliente, o produto investido, valores iniciais e finais,
+ * rentabilidade, prazo da simulação e datas correspondentes.
+ * </p>
+ */
 @Entity
 @Table(name = "simulacao_investimento")
 @Getter
@@ -20,27 +29,31 @@ public class SimulacaoInvestimentoEntity {
     @Column(name = "id")
     private Integer id;
 
-//  IMPORTANTE SOBRE O NOME DAS FK de PRODUTO E CLIENTE:
-//  Em SQLite + Hibernate existe um bug específico na geração do DDL: Todas as colunas de relacionamento (@ManyToOne / @JoinColumn) são
-//  ordenadas alfabeticamente ANTES da criação das demais colunas. Isso faz com que FKs venham antes do ID.
-//  - Se o nome da FK vier alfabeticamente antes de "id", o Hibernate gera um DDL incorreto (ex.: coluna "id," sem tipo).
-//  Para evitar esse bug, as FKs abixo são nomeadas com o padrão: id_<entidade>  Ex.: id_cliente, id_produto
-//  O problema estava no cliente_id mas como ele foi alterado para id_cliente, o nome da coluna de produto tambem foi alterada para as
-// duas ficarem usando o mesmo padrão de nome id_<entidade>
+    /**
+     * Produto que realizou a simulação.
+     *
+     * IMPORTANTE: Nome da FK segue o padrão id_<entidade> por causa de um bug no SQLite + Hibernate:
+     * Todas as colunas de relacionamento (@ManyToOne / @JoinColumn) são ordenadas alfabeticamente ANTES da criação das demais colunas.
+     * Isso faz com que FKs venham antes do ID. Se o nome da FK vier alfabeticamente antes de "id", o Hibernate gera um DDL incorreto (ex.: coluna "id," sem tipo).
+     * Para evitar esse bug, as FKs dessa entidade estão sendo nomeadas com o padrão: id_<entidade>  id_produto
+     */
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_produto")
     private ProdutoEntity produto;
 
+    /**
+     * Cliente relacionado à simulação.
+     *
+     * IMPORTANTE: Nome da FK segue o padrão id_<entidade> por causa de um bug no SQLite + Hibernate:
+     * Todas as colunas de relacionamento (@ManyToOne / @JoinColumn) são ordenadas alfabeticamente ANTES da criação das demais colunas.
+     * Isso faz com que FKs venham antes do ID. Se o nome da FK vier alfabeticamente antes de "id", o Hibernate gera um DDL incorreto (ex.: coluna "id," sem tipo).
+     * Para evitar esse bug, as FKs dessa entidade estão sendo nomeadas com o padrão: id_<entidade>  id_cliente
+     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_cliente")
     private ClienteEntity cliente;
 
-//    @Column(name = "id_produto", nullable = false)
-//    private Long idProduto;
-//
-//    @Column(name = "id_cliente", nullable = false)
-//    private Long idCliente;
 
     @Column(name = "valor_inicial9", nullable = false)
     private Double valorInicial;

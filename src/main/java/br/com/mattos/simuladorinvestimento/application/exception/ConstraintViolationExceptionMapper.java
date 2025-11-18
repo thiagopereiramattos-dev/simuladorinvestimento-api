@@ -12,10 +12,16 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper de exceção responsável por tratar erros de validação de campos.
+ *
+ * <p>Captura violações de validação de anotações como {@code @NotNull}, {@code @Positive}, {@code @NotBlank}, entre outras,
+ * retornando uma resposta estruturada em JSON.</p>
+ * <p>A resposta possui status HTTP 400 (Bad Request) e detalhes sobre os campos inválidos,
+ * representados por {@link CampoErro} dentro de {@link ApiErrorResponseDet}.</p>
+ */
 @Provider
-public class ConstraintViolationExceptionMapper
-        extends BaseExceptionHandler
-        implements ExceptionMapper<ConstraintViolationException> {
+public class ConstraintViolationExceptionMapper extends BaseExceptionHandler  implements ExceptionMapper<ConstraintViolationException> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstraintViolationExceptionMapper.class);
 

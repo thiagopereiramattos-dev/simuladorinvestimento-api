@@ -9,6 +9,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Serviço responsável pelo gerenciamento de produtos.
+ */
 @ApplicationScoped
 public class ProdutoService {
 
@@ -17,6 +20,12 @@ public class ProdutoService {
     @Inject
     ProdutoRepository produtoRepository;
 
+    /**
+     * Retorna todos os produtos disponíveis no repositório.
+     *
+     * @return uma lista de {@link Produto} contendo todos os produtos encontrados.
+     * A lista estará vazia se não houver produtos cadastrados.
+     */
     public List<Produto> listarTodos() {
         LOGGER.debug("Buscando todos os produtos no repositório");
         List<Produto> produtos = produtoRepository.listarTodos();

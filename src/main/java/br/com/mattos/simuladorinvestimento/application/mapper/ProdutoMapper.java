@@ -6,9 +6,18 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 
+/**
+ * Mapper responsável por converter objetos de domínio {@link Produto} para os DTOs de resposta da API.
+ */
 @ApplicationScoped
 public class ProdutoMapper {
 
+    /**
+     * Converte um objeto de domínio {@link Produto} em um DTO de resposta {@link ProdutoResponseDTO}.
+     *
+     * @param p Objeto de domínio Produto
+     * @return DTO ProdutoResponseDTO correspondente
+     */
     public ProdutoResponseDTO toResponse(Produto p) {
         return new ProdutoResponseDTO(
                 p.id(),
@@ -20,6 +29,12 @@ public class ProdutoMapper {
     }
 
 
+    /**
+     * Converte uma lista de objetos de domínio {@link Produto} em uma lista de DTOs de resposta {@link ProdutoResponseDTO}.
+     *
+     * @param produtos Lista de objetos Produto
+     * @return Lista de DTOs ProdutoResponseDTO
+     */
     public List<ProdutoResponseDTO> toResponseList(List<Produto> produtos) {
         return produtos.stream()
                 .map(this::toResponse)

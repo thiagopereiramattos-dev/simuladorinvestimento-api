@@ -1,5 +1,8 @@
 package br.com.mattos.simuladorinvestimento.domain.enums;
 
+/**
+ * Enum que representa o perfil de risco do cliente.
+ */
 public enum PerfilRiscoCliente {
     CONSERVADOR("Conservador"),
     MODERADO("Moderado"),

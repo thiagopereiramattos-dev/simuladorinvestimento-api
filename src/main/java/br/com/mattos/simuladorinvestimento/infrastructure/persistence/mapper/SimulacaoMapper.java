@@ -9,6 +9,13 @@ import jakarta.inject.Inject;
 
 import java.time.ZoneId;
 
+/**
+ * Mapper responsável por converter entre a entidade {@link SimulacaoInvestimentoEntity}
+ * e o objeto de domínio {@link SimulacaoInvestimento}.
+ * <p>
+ * Também utiliza {@link ProdutoMapper} para conversão de produtos relacionados.
+ * </p>
+ */
 @ApplicationScoped
 public class SimulacaoMapper {
 
@@ -16,9 +23,10 @@ public class SimulacaoMapper {
     ProdutoMapper produtoMapper; // Injetando o mapper de Produto
 
     /**
-     * Converte SimulacaoInvestimento do domínio em SimulacaoInvestimentoEntity
-     * @param simulacao objeto de domínio
-     * @return entidade de persistência pronta para salvar
+     * Converte um objeto de domínio {@link SimulacaoInvestimento} em uma entidade {@link SimulacaoInvestimentoEntity}.
+     *
+     * @param simulacao objeto de domínio a ser convertido
+     * @return entidade pronta para persistência
      */
     public SimulacaoInvestimentoEntity toEntity(SimulacaoInvestimento simulacao) {
 
@@ -51,6 +59,12 @@ public class SimulacaoMapper {
         return entity;
     }
 
+    /**
+     * Converte uma entidade {@link SimulacaoInvestimentoEntity} em um objeto de domínio {@link SimulacaoInvestimento}.
+     *
+     * @param entity entidade a ser convertida
+     * @return objeto de domínio equivalente
+     */
     public SimulacaoInvestimento toDomain(SimulacaoInvestimentoEntity entity) {
         return new SimulacaoInvestimento(
                 entity.getId(),

@@ -4,6 +4,13 @@ import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Representa um produto financeiro disponível para investimento.
+ * <p>
+ * Esta entidade é mapeada para a tabela {@code produto} no banco de dados.
+ * Contém informações como nome, tipo, rentabilidade, risco e descrição do produto.
+ * </p>
+ */
 @Entity
 @Table(name = "produto")
 @Getter

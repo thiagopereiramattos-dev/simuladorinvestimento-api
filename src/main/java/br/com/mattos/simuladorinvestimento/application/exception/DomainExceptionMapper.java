@@ -11,11 +11,20 @@ import jakarta.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Mapper de exceção para exceções de domínio da aplicação.
+ *
+ * <p>Trata especificamente a exceção {@link ProdutoNaoEncontradoException},
+ * retornando status HTTP 404 (Not Found) com a mensagem da exceção.</p>
+ *
+ * <p>Outras exceções do tipo {@link RuntimeException} são delegadas,
+ * retornando {@code null} para que outro ExceptionMapper global possa tratá-las.</p>
+ * </pre>
+ */
 @Provider
 public class DomainExceptionMapper extends BaseExceptionHandler implements ExceptionMapper<RuntimeException> {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(DomainExceptionMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DomainExceptionMapper.class);
 
     @Context
     UriInfo uriInfo;
@@ -28,7 +37,6 @@ public class DomainExceptionMapper extends BaseExceptionHandler implements Excep
             return buildResponse(Response.Status.NOT_FOUND, e.getMessage(), uriInfo);
         }
 
-        // delega para o GlobalExceptionMapper
         return null;
     }
 }
