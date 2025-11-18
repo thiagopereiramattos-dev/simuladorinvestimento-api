@@ -1,10 +1,13 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper;
 
+import br.com.mattos.simuladorinvestimento.domain.model.ResultadoSimulacao;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ClienteEntity;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.SimulacaoInvestimentoEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.time.ZoneId;
 
 @ApplicationScoped
 public class SimulacaoMapper {
@@ -37,9 +40,28 @@ public class SimulacaoMapper {
         entity.setRentabilidade(rentabilidade);
         entity.setPrazo(simulacao.resultado().prazoMeses());
         entity.setDataSimulacao(simulacao.dataSimulacao());
-        entity.setDataSimulacaoTexto(simulacao.dataSimulacao().toString());
 
+        entity.setDataSimulacaoTexto(
+                simulacao.dataSimulacao()
+                        .atZone(ZoneId.of("America/Sao_Paulo"))
+                        .toLocalDateTime()
+                        .toString()
+        );
 
         return entity;
+    }
+
+    public SimulacaoInvestimento toDomain(SimulacaoInvestimentoEntity entity) {
+        return new SimulacaoInvestimento(
+                entity.getId(),
+                entity.getCliente().getId(),
+                produtoMapper.toDomain(entity.getProduto()),
+                new ResultadoSimulacao(
+                        entity.getValorFinal(),
+                        entity.getRentabilidade(),
+                        entity.getPrazo()
+                ),
+                entity.getDataSimulacao()
+        );
     }
 }

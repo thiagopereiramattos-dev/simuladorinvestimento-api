@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 @ApplicationScoped
 public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestimentoRepository {
 
@@ -29,6 +31,13 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
         SimulacaoInvestimentoEntity entity = mapper.toEntity(simulacao);
         panacheRepo.persist(entity);
         LOGGER.info("Simulação salva com sucesso: id={}", entity.getId());
+    }
+
+    public List<SimulacaoInvestimento> listar() {
+        return panacheRepo.listAll()
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }
 

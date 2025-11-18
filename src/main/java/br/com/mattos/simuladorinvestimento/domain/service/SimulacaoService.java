@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.List;
 
 @ApplicationScoped
 public class SimulacaoService {
@@ -47,6 +48,7 @@ public class SimulacaoService {
         LOGGER.info("Resultado da simulação calculado: valorFinal={}, rentabilidade={}, prazoMeses={}", resultado.valorFinal(), resultado.rentabilidadeEfetiva(), resultado.prazoMeses());
 
         SimulacaoInvestimento simulacao = new SimulacaoInvestimento(
+                null, //id vai ger gerado na simulacao salvar
                 entrada.clienteId(),
                 produto,
                 resultado,
@@ -56,5 +58,9 @@ public class SimulacaoService {
         simulacaoInvestimentoRepository.salvar(simulacao);
         LOGGER.info("Simulação persistida com sucesso para clienteId={} e produto={}", entrada.clienteId(), produto.nome());
         return simulacao;
+    }
+
+    public List<SimulacaoInvestimento> listarSimulacoes() {
+        return simulacaoInvestimentoRepository.listar();
     }
 }
