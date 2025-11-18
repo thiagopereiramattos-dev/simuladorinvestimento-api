@@ -37,6 +37,8 @@ public class SimulacaoMapper {
         entity.setRentabilidade(rentabilidade);
         entity.setPrazo(simulacao.resultado().prazoMeses());
         entity.setDataSimulacao(simulacao.dataSimulacao());
+        entity.setDataSimulacaoTexto(simulacao.dataSimulacao().toString());
+
 
         return entity;
     }

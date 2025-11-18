@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
+import br.com.mattos.simuladorinvestimento.domain.enums.PerfilRiscoCliente;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ public class ClienteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -24,5 +25,12 @@ public class ClienteEntity {
 
     @Column(name = "email")
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "risco", nullable = false)
+    private PerfilRiscoCliente perfilRisco;
+
+    @Column(name = "senha_hash", nullable = false)
+    private String senhaHash;
 }
 

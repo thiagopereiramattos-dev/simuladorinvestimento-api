@@ -1,8 +1,8 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.Instant;
 
 @Entity
@@ -12,22 +12,37 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SimulacaoInvestimentoEntity extends PanacheEntityBase {
+public class SimulacaoInvestimentoEntity {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "INTEGER PRIMARY KEY AUTOINCREMENT")
-    private Long id;
+    @Column(name = "id")
+    private Integer id;
+
+//  IMPORTANTE SOBRE O NOME DAS FK de PRODUTO E CLIENTE:
+//  Em SQLite + Hibernate existe um bug específico na geração do DDL: Todas as colunas de relacionamento (@ManyToOne / @JoinColumn) são
+//  ordenadas alfabeticamente ANTES da criação das demais colunas. Isso faz com que FKs venham antes do ID.
+//  - Se o nome da FK vier alfabeticamente antes de "id", o Hibernate gera um DDL incorreto (ex.: coluna "id," sem tipo).
+//  Para evitar esse bug, as FKs abixo são nomeadas com o padrão: id_<entidade>  Ex.: id_cliente, id_produto
+//  O problema estava no cliente_id mas como ele foi alterado para id_cliente, o nome da coluna de produto tambem foi alterada para as
+// duas ficarem usando o mesmo padrão de nome id_<entidade>
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "produto_id")
+    @JoinColumn(name = "id_produto")
     private ProdutoEntity produto;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "id_cliente")
     private ClienteEntity cliente;
 
-    @Column(name = "valor_inicial", nullable = false)
+//    @Column(name = "id_produto", nullable = false)
+//    private Long idProduto;
+//
+//    @Column(name = "id_cliente", nullable = false)
+//    private Long idCliente;
+
+    @Column(name = "valor_inicial9", nullable = false)
     private Double valorInicial;
 
     @Column(name = "valor_final", nullable = false)
@@ -41,4 +56,8 @@ public class SimulacaoInvestimentoEntity extends PanacheEntityBase {
 
     @Column(name = "data_simulacao", nullable = false)
     private Instant dataSimulacao;
+
+    @Column(name = "data_simulacao_texto")
+    private String dataSimulacaoTexto;
+
 }

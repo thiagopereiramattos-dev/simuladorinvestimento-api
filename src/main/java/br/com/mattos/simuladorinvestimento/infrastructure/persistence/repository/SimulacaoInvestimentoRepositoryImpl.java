@@ -16,6 +16,9 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulacaoInvestimentoRepositoryImpl.class);
 
     @Inject
+    SimulacaoPanacheRepository panacheRepo;
+
+    @Inject
     SimulacaoMapper mapper;
 
     @Transactional
@@ -24,7 +27,7 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
 
         LOGGER.debug("Salvando simulação para clienteId={} e produto={}", simulacao.clientId(), simulacao.produto().nome());
         SimulacaoInvestimentoEntity entity = mapper.toEntity(simulacao);
-        entity.persist();
+        panacheRepo.persist(entity);
         LOGGER.info("Simulação salva com sucesso: id={}", entity.getId());
     }
 }

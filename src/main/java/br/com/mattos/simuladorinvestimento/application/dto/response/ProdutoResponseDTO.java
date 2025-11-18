@@ -1,5 +1,5 @@
 package br.com.mattos.simuladorinvestimento.application.dto.response;
 
-public record ProdutoResponseDTO(Long id,String nome,String tipo,Double rentabilidade,String risco) {
+public record ProdutoResponseDTO(Integer id,String nome,String tipo,Double rentabilidade,String risco) {
 
 }

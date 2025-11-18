@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
+import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ public class ProdutoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "nome_produto", nullable = false)
     private String nome;
@@ -26,9 +27,9 @@ public class ProdutoEntity {
     @Column(name = "taxa_rentabilidade", nullable = false)
     private Double rentabilidade;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "risco_id", nullable = false)
-    private RiscoEntity risco;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "risco", nullable = false)
+    private RiscoProduto risco;
 
     @Column(name = "descricao")
     private String descricao;

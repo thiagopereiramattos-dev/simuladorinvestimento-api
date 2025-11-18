@@ -1,10 +1,9 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper;
 
+import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
-import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ClienteEntity;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ProdutoEntity;
-import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.RiscoEntity;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.TipoProdutoEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -23,18 +22,20 @@ public class ProdutoMapper {
                 .map(TipoProdutoEntity::getNome)
                 .orElseThrow(() -> new ProdutoInvalidoException("Tipo do produto não definido"));
 
-        String risco = Optional.ofNullable(entity.getRisco())
-                .map(RiscoEntity::getNivel)
-                .orElseThrow(() -> new ProdutoInvalidoException("Risco do produto não definido"));
+        RiscoProduto riscoEnum = entity.getRisco();
+        if (riscoEnum == null) {
+            throw new ProdutoInvalidoException("Risco do produto não definido");
+        }
 
         return new Produto(
                 entity.getId(),
                 entity.getNome(),
                 tipo,
                 entity.getRentabilidade(),
-                risco
+                riscoEnum.getDescricao()
         );
     }
+
 
     public ProdutoEntity toEntity(Produto produto) {
 
@@ -42,19 +43,22 @@ public class ProdutoMapper {
             return null;
         }
 
-        TipoProdutoEntity tipoProdutoEntity = new TipoProdutoEntity();;
-        tipoProdutoEntity.setNome(produto.tipo());
+        var entity = new ProdutoEntity();
 
-        RiscoEntity riscoEntity = new RiscoEntity();;
-        riscoEntity.setNivel(produto.risco());
-
-        ProdutoEntity entity = new ProdutoEntity();
         entity.setId(produto.id());
         entity.setNome(produto.nome());
-        entity.setTipo(tipoProdutoEntity);
-        entity.setRisco(riscoEntity);
-        entity.setRentabilidade(produto.rentabilidade());
 
+        var tipoProdutoEntity = new TipoProdutoEntity();
+        tipoProdutoEntity.setNome(produto.tipo());
+        entity.setTipo(tipoProdutoEntity);
+
+        try {
+            entity.setRisco(RiscoProduto.valueOf(produto.risco().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new ProdutoInvalidoException("Risco inválido: " + produto.risco());
+        }
+
+        entity.setRentabilidade(produto.rentabilidade());
         return entity;
     }
 }
