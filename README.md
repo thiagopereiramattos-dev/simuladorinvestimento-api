@@ -1,4 +1,46 @@
-### 📌 Por que usei `id_cliente` e não `client_id` nas foreign keys?
+— Simulador de Investimentos (Backend)
+
+Visão Geral
+
+Este projeto implementa uma API REST para simular investimentos financeiros. Ele foi desenvolvido em Java 21 com Quarkus 3+, seguindo princípios de arquitetura limpa, boas práticas de modelagem de domínio e um tratamento global e padronizado de exceções.
+
+A API recebe dados de simulação, valida regras de negócio, consulta entidades persistidas e retorna um resultado consolidado para o front-end.
+
+Tecnologias Utilizadas
+
+Java 21
+
+Quarkus 3+ (RESTEasy Reactive, Hibernate ORM)
+
+JAX-RS para endpoints REST
+
+SQLite ou SQL Server (driver configurável)
+
+Lombok
+
+SLF4J para logs
+
+Estrutura de Pacotes (simplificada)
+
+br.com.mattos.simuladorinvestimento
+│
+├── application
+│   ├── controller
+│   ├── dto
+│   ├── exception          <-- GlobalExceptionMapper + ApiErrorResponse
+│   └── service
+│
+├── domain
+│   ├── entity
+│   ├── exception          <-- Exceções de negócio (ex: ProdutoNaoEncontradoException)
+│   └── model
+│
+└── infrastructure
+├── persistence
+└── repository
+
+
+### 📌 Por que usei `id_cliente` e não `client_id` nas foreign key da entidade SimulacaoInvestimento?
 
 O Hibernate, quando usado com SQLite, estava com um comportamento inconsistente
 específico relacionado às colunas de relacionamento (`@ManyToOne` /

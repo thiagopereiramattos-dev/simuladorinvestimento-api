@@ -4,7 +4,6 @@ import br.com.mattos.simuladorinvestimento.application.dto.request.SimularInvest
 import br.com.mattos.simuladorinvestimento.application.dto.response.SimulacaoListResponseDTO;
 import br.com.mattos.simuladorinvestimento.application.dto.response.SimularInvestimentoResponseDTO;
 import br.com.mattos.simuladorinvestimento.application.mapper.SimulacaoMapper;
-import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoEntrada;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
 import br.com.mattos.simuladorinvestimento.domain.service.SimulacaoService;
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-@Path("/simular-investimento")
+@Path("/")
 @Consumes("application/json")
 @Produces("application/json")
 public class SimulacaoInvestimentoResource {
@@ -30,18 +29,25 @@ public class SimulacaoInvestimentoResource {
     SimulacaoMapper mapper;
 
     @POST
+    @Path("/simular-investimento")
     public SimularInvestimentoResponseDTO simular(@Valid SimularInvestimentoRequestDTO request) {
+        LOGGER.info("Requisição recebida: simular investimento");
         SimulacaoEntrada dominio = mapper.toDomain(request);
         SimulacaoInvestimento simulacao = simulacaoService.simular(dominio);
+        LOGGER.info("Simulação realizada com sucesso: clienteId={} produto={} valorFinal={}",
+                simulacao.clientId(),
+                simulacao.produto().nome(),
+                simulacao.resultado().valorFinal()
+        );
         return mapper.toResponse(simulacao);
     }
 
     @GET
+    @Path("/simulacoes")
     public List<SimulacaoListResponseDTO> listar() {
-
-        LOGGER.info("Requisição recebida: listar todos produtos");
+        LOGGER.info("Requisição recebida: listar simulações");
         List<SimulacaoInvestimento> simulacoes = simulacaoService.listarSimulacoes();
-        LOGGER.info("Retornando {} simulacoes", simulacoes.size());
+        LOGGER.info("Retornando {} simulações", simulacoes.size());
         return mapper.toListResponseList(simulacoes);
     }
 }
