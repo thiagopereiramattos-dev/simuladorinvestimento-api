@@ -1,6 +1,5 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity;
 
-import br.com.mattos.simuladorinvestimento.domain.enums.PerfilRiscoCliente;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,9 +42,12 @@ public class ClienteEntity {
     @Column(name = "email")
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "risco", nullable = false)
-    private PerfilRiscoCliente perfilRisco;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "risco", nullable = false)
+//    private PerfilRiscoCliente perfilRisco;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "perfil_risco_id", nullable = false)
+    private PerfilRiscoEntity perfilRisco;
 
     @Column(name = "senha_hash", nullable = false)
     private String senhaHash;

@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.application.exception;
 
+import br.com.mattos.simuladorinvestimento.domain.exception.ClienteNaoEncontradoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
 import jakarta.ws.rs.WebApplicationException;
@@ -44,6 +45,11 @@ public class DomainExceptionMapper extends BaseExceptionHandler implements Excep
 
         if (exception instanceof ProdutoInvalidoException ex) {
             LOGGER.info("Produto invalido: {}", ex.getMessage());
+            return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
+        }
+
+        if (exception instanceof ClienteNaoEncontradoException ex) {
+            LOGGER.info("Cliente não encontrado: {}", ex.getMessage());
             return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
         }
 

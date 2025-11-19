@@ -12,6 +12,10 @@ import java.time.Instant;
  * @param path Caminho da requisição que causou o erro
  * @param timestamp Momento em que o erro ocorreu
  */
-public record ApiErrorResponse(int status,String error,String mensagem,String path,Instant timestamp) {
-
-}
+public record ApiErrorResponse(
+        int status,
+        String error,
+        String mensagem,
+        String path,
+        Instant timestamp
+) {}

@@ -12,6 +12,10 @@ import java.util.List;
  * @param path Caminho da requisição que causou o erro
  * @param detalhes Lista de {@link CampoErro} detalhando cada campo inválido
  */
-public record ApiErrorResponseDet(int status, String error, String mensagem, String path, List<CampoErro> detalhes) {
-
-}
+public record ApiErrorResponseDet(
+        int status,
+        String error,
+        String mensagem,
+        String path,
+        List<CampoErro> detalhes
+) {}

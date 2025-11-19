@@ -1,7 +1,9 @@
 package br.com.mattos.simuladorinvestimento.domain.service;
 
+import br.com.mattos.simuladorinvestimento.domain.exception.ClienteNaoEncontradoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
 import br.com.mattos.simuladorinvestimento.domain.model.*;
+import br.com.mattos.simuladorinvestimento.domain.repository.ClienteRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.SimulacaoInvestimentoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,6 +26,9 @@ public class SimulacaoService {
     ProdutoRepository produtoRepository;
 
     @Inject
+    ClienteRepository clienteRepository;
+
+    @Inject
     SimulacaoInvestimentoRepository simulacaoInvestimentoRepository;
 
     /**
@@ -41,10 +46,17 @@ public class SimulacaoService {
 
             Produto produto = produtoRepository.buscarPorTipo(entrada.tipoProduto())
                     .orElseThrow(() -> {
-                        LOGGER.warn("Produto do tipo '{}' não encontrado para clienteId={}", entrada.tipoProduto(), entrada.clienteId());
+                        LOGGER.warn("Produto do tipo '{}' não encontrado ", entrada.tipoProduto());
                         return new ProdutoNaoEncontradoException(entrada.tipoProduto());
                     });
             LOGGER.debug("Produto encontrado: id={}, nome={}, rentabilidade={}", produto.id(), produto.nome(), produto.rentabilidade());
+
+            Cliente cliente = clienteRepository.buscarPorId(entrada.clienteId())
+                    .orElseThrow(() -> {
+                        LOGGER.warn("CLiente '{}' não encontrado ", entrada.clienteId());
+                        return new ClienteNaoEncontradoException("Cliente não encontrado: clientId: " + entrada.clienteId());
+                    });
+            LOGGER.debug("Cliente encontrado: id={}, nome={}", cliente.id(), cliente.nome());
 
             Double valorFinal = entrada.valor() * (1 + produto.rentabilidade());
 
@@ -71,8 +83,8 @@ public class SimulacaoService {
 
             return simulacao;
 
-        } catch (ProdutoNaoEncontradoException exNaoEncontrado) {
-            throw exNaoEncontrado;
+        } catch (ProdutoNaoEncontradoException | ClienteNaoEncontradoException exNotFound) {
+            throw exNotFound;
         } catch (Exception ex) {
             LOGGER.error("Erro ao simular investimento para clienteId={}", entrada.clienteId(), ex);
             throw new RuntimeException("Não foi possível realizar a simulação. Ocorreu um erro interno.", ex);

@@ -26,34 +26,43 @@ INSERT INTO produto (id, nome_produto, tipo_produto_id, taxa_rentabilidade, risc
 (8, 'Bitcoin Custodiado',        8, 0.035, 'ALTO', 'Criptomoeda com custódia segura'),
 (9, 'Fundo Ações Tech Growth',   9, 0.028, 'ALTO', 'Fundo de ações de empresas de tecnologia');
 
+-- ===========================
+-- PERFIS DE RISCO
+-- ===========================
+INSERT INTO perfil_risco (id, nome, pontuacao, descricao) VALUES
+(1, 'CONSERVADOR', 30, 'Baixa movimentação, foco em liquidez'),
+(2, 'MODERADO',   65, 'Equilíbrio entre segurança e rentabilidade'),
+(3, 'AGRESSIVO',  90, 'Busca por alta rentabilidade, maior risco');
+
 
 -- ===========================
 -- CLIENTES (senha padrão: 123456)
 -- Hash: $2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u
 -- ===========================
 
-INSERT INTO cliente (id, nome, cpf, email, risco, senha_hash) VALUES
-(1,  'Ana Souza',              12345678901, 'ana.souza@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(2,  'Bruno Almeida',          23456789012, 'bruno.almeida@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(3,  'Carla Mendes',           34567890123, 'carla.mendes@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(4,  'Diego Santos',           45678901234, 'diego.santos@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(5,  'Eduarda Martins',        56789012345, 'eduarda.martins@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(6,  'Felipe Carvalho',        67890123456, 'felipe.carvalho@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(7,  'Gabriela Castro',        78901234567, 'gabriela.castro@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(8,  'Henrique Rocha',         89012345678, 'henrique.rocha@example.com', 'CONSERVADOR', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-
-(9,  'Isabela Ribeiro',        90123456789, 'isabela.ribeiro@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(10, 'João Barros',            12345678790, 'joao.barros@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(11, 'Karen Azevedo',          11122233344, 'karen.azevedo@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(12, 'Lucas Ferreira',         22233344455, 'lucas.ferreira@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(13, 'Mariana Lopes',          33344455566, 'mariana.lopes@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(14, 'Nelson Moreira',         44455566677, 'nelson.moreira@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(15, 'Olivia Santos',          55566677788, 'olivia.santos@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(16, 'Paulo Aragão',           66677788899, 'paulo.aragao@example.com', 'MODERADO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-
-(17, 'Queila Duarte',          77788899900, 'queila.duarte@example.com', 'AGRESSIVO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(18, 'Rafael Monteiro',        88899900011, 'rafael.monteiro@example.com', 'AGRESSIVO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(19, 'Sabrina Faria',          99900011122, 'sabrina.faria@example.com', 'AGRESSIVO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
-(20, 'Adriano Freitas',        10120230340, 'adriano.freitas@example.com', 'AGRESSIVO', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u');
+INSERT INTO cliente (id, nome, cpf, email, perfil_risco_id, senha_hash) VALUES
+--CONSERVADOR
+(1,  'Ana Souza',              12345678901, 'ana.souza@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(2,  'Bruno Almeida',          23456789012, 'bruno.almeida@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(3,  'Carla Mendes',           34567890123, 'carla.mendes@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(4,  'Diego Santos',           45678901234, 'diego.santos@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(5,  'Eduarda Martins',        56789012345, 'eduarda.martins@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(6,  'Felipe Carvalho',        67890123456, 'felipe.carvalho@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(7,  'Gabriela Castro',        78901234567, 'gabriela.castro@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(8,  'Henrique Rocha',         89012345678, 'henrique.rocha@example.com', '1', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+--MODERADO
+(9,  'Isabela Ribeiro',        90123456789, 'isabela.ribeiro@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(10, 'João Barros',            12345678790, 'joao.barros@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(11, 'Karen Azevedo',          11122233344, 'karen.azevedo@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(12, 'Lucas Ferreira',         22233344455, 'lucas.ferreira@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(13, 'Mariana Lopes',          33344455566, 'mariana.lopes@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(14, 'Nelson Moreira',         44455566677, 'nelson.moreira@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(15, 'Olivia Santos',          55566677788, 'olivia.santos@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(16, 'Paulo Aragão',           66677788899, 'paulo.aragao@example.com', '2', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+--AGRESSIVO
+(17, 'Queila Duarte',          77788899900, 'queila.duarte@example.com', '3', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(18, 'Rafael Monteiro',        88899900011, 'rafael.monteiro@example.com', '3', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(19, 'Sabrina Faria',          99900011122, 'sabrina.faria@example.com', '3', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u'),
+(20, 'Adriano Freitas',        10120230340, 'adriano.freitas@example.com', '3', '$2a$10$Z4rS4iZpHQPfzLmc9.lLJeGLumZ5qX6Ch12.hXqT8vmUMBiXx2E.u');
 
 
