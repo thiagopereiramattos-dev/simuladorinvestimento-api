@@ -5,6 +5,7 @@ import br.com.mattos.simuladorinvestimento.application.dto.response.*;
 import br.com.mattos.simuladorinvestimento.domain.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.text.DecimalFormat;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
  */
 @ApplicationScoped
 public class SimulacaoMapper {
+
+    private static final DecimalFormat formatDecimal = new DecimalFormat("#0.00");
 
     /**
      * Converte o DTO de requisição para o modelo de domínio.
@@ -47,7 +50,7 @@ public class SimulacaoMapper {
         );
 
         ResultadoSimulacaoResponseDTO resultado = new ResultadoSimulacaoResponseDTO(
-                simulacao.resultado().valorFinal(),
+                formatDecimal.format(simulacao.resultado().valorFinal()),
                 simulacao.resultado().rentabilidadeEfetiva(),
                 simulacao.resultado().prazoMeses()
         );
@@ -75,8 +78,8 @@ public class SimulacaoMapper {
                 simulacao.idSimulacao(),
                 simulacao.clientId(),
                 simulacao.produto().nome(),
-                simulacao.resultado().valorInvestido(),
-                simulacao.resultado().valorFinal(),
+                formatDecimal.format(simulacao.resultado().valorInvestido()),
+                formatDecimal.format(simulacao.resultado().valorFinal()),
                 simulacao.resultado().prazoMeses(),
                 simulacao.dataSimulacao()
                         .atZone(ZoneId.of("America/Sao_Paulo"))
@@ -108,7 +111,7 @@ public class SimulacaoMapper {
                 resultado.produto(),
                 resultado.data(),
                 resultado.quantidadeSimulacoes(),
-                resultado.mediaValorFinal()
+                formatDecimal.format(resultado.mediaValorFinal())
         );
     }
 
