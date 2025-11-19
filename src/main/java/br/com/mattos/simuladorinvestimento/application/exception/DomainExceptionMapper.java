@@ -2,15 +2,12 @@ package br.com.mattos.simuladorinvestimento.application.exception;
 
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
-
-import br.com.mattos.simuladorinvestimento.domain.exception.SimulacaoNaoEncontradaException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import jakarta.ws.rs.core.UriInfo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +16,8 @@ import org.slf4j.LoggerFactory;
  *
  * <p>Este mapper trata especificamente as exceções de negócio:
  * <ul>
- *     <li>{@link ProdutoNaoEncontradoException}: retorna HTTP 404 (Not Found) com a mensagem da exceção.</li>
- *     <li>{@link ProdutoInvalidoException}: retorna HTTP 404 (Not Found) com a mensagem da exceção.</li>
- *     <li>{@link SimulacaoNaoEncontradaException}: retorna HTTP 404 (Not Found) com a mensagem da exceção.</li>
+ *     <li>{@link ProdutoNaoEncontradoException}: retorna HTTP 400 (Bad Request) com a mensagem da exceção.</li>
+ *     <li>{@link ProdutoInvalidoException}: retorna HTTP 400 (Bad Request) com a mensagem da exceção.</li>
  * </ul>
  * </p>
  *
@@ -48,11 +44,6 @@ public class DomainExceptionMapper extends BaseExceptionHandler implements Excep
 
         if (exception instanceof ProdutoInvalidoException ex) {
             LOGGER.info("Produto invalido: {}", ex.getMessage());
-            return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
-        }
-
-        if (exception instanceof SimulacaoNaoEncontradaException ex) {
-            LOGGER.info("Simulação não encontrada: {}", ex.getMessage());
             return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
         }
 

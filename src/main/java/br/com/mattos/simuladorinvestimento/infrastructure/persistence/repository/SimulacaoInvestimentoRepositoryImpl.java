@@ -25,6 +25,16 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulacaoInvestimentoRepositoryImpl.class);
 
+    private static final String QUERY_POR_DIA = """
+        SELECT s.produto.nome,
+               s.dataSimulacaoDate,
+               COUNT(s),
+               AVG(s.valorFinal)
+        FROM SimulacaoInvestimentoEntity s
+        GROUP BY s.produto.nome, s.dataSimulacaoDate
+        ORDER BY s.dataSimulacaoDate DESC
+        """;
+
     @Inject
     SimulacaoPanacheRepository panacheRepo;
 
@@ -58,39 +68,17 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
                 .toList();
     }
 
-//    @Override
-//    public List<ResultadoConsultaSimulacaoPorDia> listarPorProdutoEDia() {
-//        List<Object[]> results = panacheRepo.getEntityManager()
-//                .createQuery(
-//                        "SELECT s.produto.nome, FUNCTION('date', s.dataSimulacao), COUNT(s), AVG(s.valorFinal) " +
-//                                "FROM SimulacaoInvestimentoEntity s " +
-//                                "GROUP BY s.produto.nome, FUNCTION('date', s.dataSimulacao) " +
-//                                "ORDER BY FUNCTION('date', s.dataSimulacao) DESC",
-//                        Object[].class
-//                )
-//                .getResultList();
-//
-//        return results.stream()
-//                .map(mapper::toResultadoConsultaPorDia)
-//                .toList();
-//    }
-
+    /**
+     * Consulta agregada das simulações agrupadas por produto e por dia da simulação.
+     * Utiliza o campo {@code dataSimulacaoDate} para evitar funções específicas de SQL e garantir portabilidade entre bancos.
+     *
+     * @return lista agregada contendo produto, data, quantidade de simulações e média do valor final
+     */
     @Override
     public List<ResultadoConsultaSimulacaoPorDia> listarPorProdutoEDia() {
 
-        // SQLite grava Instant como epochMilli → precisa dividir por 1000
-        String sql =
-                "SELECT s.produto.nome, " +
-                        "       FUNCTION('strftime', '%Y-%m-%d', s.dataSimulacao / 1000, 'unixepoch'), " +
-                        "       COUNT(s), " +
-                        "       AVG(s.valorFinal) " +
-                        "FROM SimulacaoInvestimentoEntity s " +
-                        "GROUP BY s.produto.nome, " +
-                        "         FUNCTION('strftime', '%Y-%m-%d', s.dataSimulacao / 1000, 'unixepoch') " +
-                        "ORDER BY FUNCTION('strftime', '%Y-%m-%d', s.dataSimulacao / 1000, 'unixepoch') DESC";
-
         List<Object[]> results = panacheRepo.getEntityManager()
-                .createQuery(sql, Object[].class)
+                .createQuery(QUERY_POR_DIA, Object[].class)
                 .getResultList();
 
         return results.stream()

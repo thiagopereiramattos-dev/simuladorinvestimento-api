@@ -1,7 +1,6 @@
 package br.com.mattos.simuladorinvestimento.domain.service;
 
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
-import br.com.mattos.simuladorinvestimento.domain.exception.SimulacaoNaoEncontradaException;
 import br.com.mattos.simuladorinvestimento.domain.model.*;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.SimulacaoInvestimentoRepository;
@@ -44,8 +43,9 @@ public class SimulacaoService {
      * @throws RuntimeException caso ocorra algum problema ao persistir a simulação
      */
     public SimulacaoInvestimento simular(SimulacaoEntrada entrada) {
+
+        LOGGER.info("Iniciando simulação para clienteId={} e tipoProduto={}", entrada.clienteId(), entrada.tipoProduto());
         try {
-            LOGGER.info("Iniciando simulação para clienteId={} e tipoProduto={}", entrada.clienteId(), entrada.tipoProduto());
 
             Produto produto = produtoRepository.buscarPorTipo(entrada.tipoProduto())
                     .orElseThrow(() -> {
@@ -96,8 +96,12 @@ public class SimulacaoService {
      * @throws RuntimeException caso ocorra algum problema ao acessar o repositório
      */
     public List<SimulacaoInvestimento> listarSimulacoes() {
+
+        LOGGER.debug("Iniciando consulta de todas as simulações");
         try {
-            return simulacaoInvestimentoRepository.listar();
+            List<SimulacaoInvestimento> lista = simulacaoInvestimentoRepository.listar();
+            LOGGER.debug("Total de simulações retornadas: {}", lista.size());
+            return lista;
         } catch (Exception ex) {
             LOGGER.error("Erro ao listar simulações", ex);
             throw new RuntimeException("Não foi possível listar as simulações. Ocorreu um erro interno.", ex);
@@ -105,29 +109,25 @@ public class SimulacaoService {
     }
 
     /**
-     * Lista as simulações agrupadas por produto e dia, retornando quantidade de simulações
-     * e média do valor final.
+     * Lista as simulações agrupadas por produto e dia, retornando a quantidade de simulações e a média do valor final para cada agrupamento.
      *
-     * @return Lista de {@link ResultadoConsultaSimulacaoPorDia} contendo dados agregados por produto e dia
-     * @throws SimulacaoNaoEncontradaException caso não existam simulações registradas
-     * @throws RuntimeException em caso de erro ao acessar o repositório
+     * @return Lista de {@link ResultadoConsultaSimulacaoPorDia} contendo os dados agregados,
+     *  pode ir  vazia se não houver registros.
+     *
+     * @throws RuntimeException se ocorrer algum erro inesperado ao acessar o repositório
      */
     public List<ResultadoConsultaSimulacaoPorDia> listarSimulacoesPorProdutoEDia() {
+
+        LOGGER.debug("Iniciando consulta de simulações agregadas por produto e dia");
         try {
-            List<ResultadoConsultaSimulacaoPorDia> resultados = simulacaoInvestimentoRepository.listarPorProdutoEDia();
+            List<ResultadoConsultaSimulacaoPorDia> resultados =
+                    simulacaoInvestimentoRepository.listarPorProdutoEDia();
 
-            if (resultados.isEmpty()) {
-                LOGGER.warn("Nenhuma simulação encontrada para consulta por produto e dia");
-                throw new SimulacaoNaoEncontradaException("Nenhuma simulação encontrada");
-            }
-
-            LOGGER.info("Retornando {} resultados agregados por produto e dia", resultados.size());
+            LOGGER.info("Consulta concluída com sucesso. Registros encontrados: {}", resultados.size());
             return resultados;
-        } catch (SimulacaoNaoEncontradaException exNaoEncontrada) {
-            throw exNaoEncontrada;
         } catch (Exception ex) {
             LOGGER.error("Erro ao consultar simulações por produto e dia", ex);
-            throw new RuntimeException("Não foi possível consultar simulações. Ocorreu um erro interno.", ex);
+            throw new RuntimeException("Erro interno ao consultar simulações.", ex);
         }
     }
 }

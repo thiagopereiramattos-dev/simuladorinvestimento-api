@@ -24,12 +24,20 @@ public class ProdutoService {
      * Retorna todos os produtos disponíveis no repositório.
      *
      * @return uma lista de {@link Produto} contendo todos os produtos encontrados.
-     * A lista estará vazia se não houver produtos cadastrados.
+     *  A lista estará vazia se não houver produtos cadastrados.
+     * @throws RuntimeException caso ocorra algum erro interno ao acessar o repositório
      */
     public List<Produto> listarTodos() {
-        LOGGER.debug("Buscando todos os produtos no repositório");
-        List<Produto> produtos = produtoRepository.listarTodos();
-        LOGGER.info("Total de produtos encontrados: {}", produtos.size());
-        return produtos;
+
+        LOGGER.debug("Iniciando consulta de todos os produtos");
+        try {
+            List<Produto> produtos = produtoRepository.listarTodos();
+            LOGGER.debug("Total de produtos encontrados: {}", produtos.size());
+            return produtos;
+
+        } catch (Exception ex) {
+            LOGGER.error("Erro ao listar produtos", ex);
+            throw new RuntimeException("Não foi possível listar os produtos. Ocorreu um erro interno.", ex);
+        }
     }
 }

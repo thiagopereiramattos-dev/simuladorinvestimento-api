@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 
 /**
@@ -67,10 +68,24 @@ public class SimulacaoInvestimentoEntity {
     @Column(name = "prazo", nullable = false)
     private Integer prazo;
 
+    /**
+     * Data/hora completa da simulação (Instant).
+     * Persistida como epochMilli mediante o AttributeConverter.
+     */
     @Column(name = "data_simulacao", nullable = false)
     private Instant dataSimulacao;
 
+    /**
+     * Texto formatado da data da simulação (ex.: 2025-11-18T10:35:22).
+     */
     @Column(name = "data_simulacao_texto")
     private String dataSimulacaoTexto;
+
+    /**
+     * Data da simulação preparada para relatórios agregados.
+     */
+    @Column(name = "data_simulacao_date", nullable = false)
+    private LocalDate dataSimulacaoDate;
+
 
 }

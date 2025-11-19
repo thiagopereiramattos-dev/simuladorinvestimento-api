@@ -5,12 +5,12 @@ import br.com.mattos.simuladorinvestimento.domain.model.ResultadoSimulacao;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ClienteEntity;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.SimulacaoInvestimentoEntity;
+import br.com.mattos.simuladorinvestimento.infrastructure.util.DateConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 /**
  * Mapper responsável por converter entre a entidade {@link SimulacaoInvestimentoEntity}
@@ -23,14 +23,21 @@ import java.time.ZoneId;
 public class SimulacaoMapper {
 
     @Inject
-    ProdutoMapper produtoMapper; // Injetando o mapper de Produto
+    ProdutoMapper produtoMapper;
 
     /**
-     * Converte um objeto de domínio {@link SimulacaoInvestimento} em uma entidade {@link SimulacaoInvestimentoEntity}.
+     * Converte um objeto de domínio {@link SimulacaoInvestimento} para a entidade
+     * {@link SimulacaoInvestimentoEntity}, incluindo o preenchimento dos campos:
+     * <ul>
+     *     <li>{@code dataSimulacao} (Instant)</li>
+     *     <li>{@code dataSimulacaoTexto} (String formatada)</li>
+     *     <li>{@code dataSimulacaoDate} (LocalDate para relatórios)</li>
+     * </ul>
      *
-     * @param simulacao objeto de domínio a ser convertido
-     * @return entidade pronta para persistência
+     * @param simulacao objeto de domínio contendo os dados da simulação
+     * @return entidade preenchida e pronta para persistência
      */
+
     public SimulacaoInvestimentoEntity toEntity(SimulacaoInvestimento simulacao) {
 
         SimulacaoInvestimentoEntity entity = new SimulacaoInvestimentoEntity();
@@ -44,20 +51,15 @@ public class SimulacaoMapper {
         }
         entity.setCliente(cliente);
 
-        double valorFinal = simulacao.resultado().valorFinal();
-        double rentabilidade = simulacao.resultado().rentabilidadeEfetiva();
         entity.setValorInvestido(simulacao.resultado().valorInvestido());
-        entity.setValorFinal(valorFinal);
-        entity.setRentabilidade(rentabilidade);
+        entity.setValorFinal(simulacao.resultado().valorFinal());
+        entity.setRentabilidade(simulacao.resultado().rentabilidadeEfetiva());
         entity.setPrazo(simulacao.resultado().prazoMeses());
-        entity.setDataSimulacao(simulacao.dataSimulacao());
 
-        entity.setDataSimulacaoTexto(
-                simulacao.dataSimulacao()
-                        .atZone(ZoneId.of("America/Sao_Paulo"))
-                        .toLocalDateTime()
-                        .toString()
-        );
+        Instant instant = simulacao.dataSimulacao();
+        entity.setDataSimulacao(instant);
+        entity.setDataSimulacaoDate(DateConverter.toLocalDate(instant));
+        entity.setDataSimulacaoTexto(DateConverter.toDateTimeText(instant));
 
         return entity;
     }
@@ -66,7 +68,7 @@ public class SimulacaoMapper {
      * Converte uma entidade {@link SimulacaoInvestimentoEntity} em um objeto de domínio {@link SimulacaoInvestimento}.
      *
      * @param entity entidade a ser convertida
-     * @return objeto de domínio equivalente
+     * @return objeto {@link SimulacaoInvestimento} domínio preenchido
      */
     public SimulacaoInvestimento toDomain(SimulacaoInvestimentoEntity entity) {
         return new SimulacaoInvestimento(
@@ -84,35 +86,30 @@ public class SimulacaoMapper {
     }
 
     /**
-     * Converte a linha da consulta JPQL (Object[]) para {@link ResultadoConsultaSimulacaoPorDia}.
+     * Converte uma linha da consulta agregada (Object[]) para o objeto de domínio {@link ResultadoConsultaSimulacaoPorDia}.
+     * Este método é utilizado pelo repositório para transformar o resultado da JPQL em um modelo fortemente tipado.
      *
-     * @param row Array contendo [nomeProduto, dataSimulacao (Instant), quantidade, mediaValorFinal]
-     * @return objeto {@link ResultadoConsultaSimulacaoPorDia}
+     * Estrutura esperada do array:
+     * <ul>
+     *     <li>[0] - String: nome do produto</li>
+     *     <li>[1] - LocalDate: data da simulação (campo dataSimulacaoDate)</li>
+     *     <li>[2] - Number: quantidade de simulações</li>
+     *     <li>[3] - Number: média do valor final</li>
+     * </ul>
+     *
+     * @param row linha retornada pela query JPQL
+     * @return instância de {@link ResultadoConsultaSimulacaoPorDia}
      */
-//    public ResultadoConsultaSimulacaoPorDia toResultadoConsultaPorDia(Object[] row) {
-//        String produto = (String) row[0];
-//        java.sql.Date dataSimulacao = (java.sql.Date) row[1]; // agora é Date
-//        Long quantidade = (Long) row[2];
-//        Double mediaValorFinal = (Double) row[3];
-//
-//        return new ResultadoConsultaSimulacaoPorDia(
-//                produto,
-//                dataSimulacao.toLocalDate(),
-//                quantidade,
-//                mediaValorFinal
-//        );
-//    }
-
     public ResultadoConsultaSimulacaoPorDia toResultadoConsultaPorDia(Object[] row) {
 
         String nomeProduto = (String) row[0];
-        String dataString = (String) row[1];      // VEM DO strftime → yyyy-MM-dd
+        LocalDate data = (LocalDate) row[1];
         Long quantidade = ((Number) row[2]).longValue();
         Double mediaValorFinal = ((Number) row[3]).doubleValue();
 
         return new ResultadoConsultaSimulacaoPorDia(
                 nomeProduto,
-                LocalDate.parse(dataString),        // converte a string para data
+                data,
                 quantidade,
                 mediaValorFinal
         );
