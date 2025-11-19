@@ -13,10 +13,7 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * Serviço responsável pela simulação de investimentos.
- * <p>
- * Realiza cálculos de simulação, persiste resultados e consulta a listaa de simulações existentes.
- * </p>
+ * Serviço responsável pela execução e consulta de simulações de investimento.
  */
 @ApplicationScoped
 public class SimulacaoService {
@@ -30,17 +27,12 @@ public class SimulacaoService {
     SimulacaoInvestimentoRepository simulacaoInvestimentoRepository;
 
     /**
-     * Realiza uma simulação de investimento para um cliente.
-     * <p>
-     * Busca o produto pelo tipo informado na entrada da simulação,
-     * calcula o valor final baseado na rentabilidade do produto e cria
-     * um objeto {@link SimulacaoInvestimento}, que será persistido no repositório.
-     * </p>
+     * Realiza uma simulação de investimento utilizando os dados informados.
+     * Busca o produto associado, calcula o valor final e persiste a simulação.
      *
-     * @param entrada dados da simulação fornecidos pelo {@link SimulacaoEntrada}
-     * @return um objeto {@link SimulacaoInvestimento} com o resultado da simulação
-     * @throws ProdutoNaoEncontradoException caso não exista produto do tipo informado
-     * @throws RuntimeException caso ocorra algum problema ao persistir a simulação
+     * @param entrada dados da simulação informados pelo cliente.
+     * @return {@link SimulacaoInvestimento} contendo o resultado gerado.
+     * @throws ProdutoNaoEncontradoException caso o tipo de produto informado não exista.
      */
     public SimulacaoInvestimento simular(SimulacaoEntrada entrada) {
 
@@ -69,11 +61,9 @@ public class SimulacaoService {
                     resultado.prazoMeses());
 
             SimulacaoInvestimento simulacao = new SimulacaoInvestimento(
-                    null, // id será gerado ao persistir
                     entrada.clienteId(),
                     produto,
-                    resultado,
-                    Instant.now()
+                    resultado
             );
 
             simulacaoInvestimentoRepository.salvar(simulacao);
@@ -90,10 +80,9 @@ public class SimulacaoService {
     }
 
     /**
-     * Lista todas as simulações de investimento realizadas.
+     * Retorna todas as simulações já realizadas.
      *
-     * @return lista de {@link SimulacaoInvestimento} contendo todas as simulações persistidas
-     * @throws RuntimeException caso ocorra algum problema ao acessar o repositório
+     * @return lista de {@link SimulacaoInvestimento}; pode estar vazia.
      */
     public List<SimulacaoInvestimento> listarSimulacoes() {
 
@@ -109,12 +98,10 @@ public class SimulacaoService {
     }
 
     /**
-     * Lista as simulações agrupadas por produto e dia, retornando a quantidade de simulações e a média do valor final para cada agrupamento.
+     * Retorna as simulações agregadas por produto e dia, incluindo quantidade de simulações
+     * e média do valor final no período.
      *
-     * @return Lista de {@link ResultadoConsultaSimulacaoPorDia} contendo os dados agregados,
-     *  pode ir  vazia se não houver registros.
-     *
-     * @throws RuntimeException se ocorrer algum erro inesperado ao acessar o repositório
+     * @return lista de {@link ResultadoConsultaSimulacaoPorDia}; pode estar vazia.
      */
     public List<ResultadoConsultaSimulacaoPorDia> listarSimulacoesPorProdutoEDia() {
 

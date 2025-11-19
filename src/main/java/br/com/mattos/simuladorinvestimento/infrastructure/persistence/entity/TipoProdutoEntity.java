@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 /**
- * Representa o tipo de um produto financeiro.
+ * Entidade que representa o tipo de um produto financeiro.
  * <p>
- * Esta entidade é mapeada para a tabela {@code tipo_produto} no banco de dados.
- * Contém informações como nome e descrição do tipo.
+ * Mapeada para a tabela {@code tipo_produto}, armazena informações básicas
+ * como nome (valor único) e descrição. É utilizada para categorizar os produtos na aplicação
  * </p>
  */
 @Entity

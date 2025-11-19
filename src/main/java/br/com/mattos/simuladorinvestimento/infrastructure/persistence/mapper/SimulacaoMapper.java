@@ -13,10 +13,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 /**
- * Mapper responsável por converter entre a entidade {@link SimulacaoInvestimentoEntity}
- * e o objeto de domínio {@link SimulacaoInvestimento}.
+ * Mapper responsável por converter entre a entidade {@link SimulacaoInvestimentoEntity} e o objeto de domínio {@link SimulacaoInvestimento}.
  * <p>
  * Também utiliza {@link ProdutoMapper} para conversão de produtos relacionados.
+ * Além disso, faz a conversão de ID {@link Integer} (entidade) para {@link Long} (domínio/DTO),
  * </p>
  */
 @ApplicationScoped
@@ -47,8 +47,9 @@ public class SimulacaoMapper {
 
         ClienteEntity cliente = new ClienteEntity();;
         if (simulacao.clientId() != null) {
-            cliente.setId(simulacao.clientId());
+            cliente.setId(simulacao.clientId().intValue());
         }
+
         entity.setCliente(cliente);
 
         entity.setValorInvestido(simulacao.resultado().valorInvestido());
@@ -67,13 +68,16 @@ public class SimulacaoMapper {
     /**
      * Converte uma entidade {@link SimulacaoInvestimentoEntity} em um objeto de domínio {@link SimulacaoInvestimento}.
      *
+     * <p>
+     *  Converte o ID de {@link Integer} na Entity para {@link Long} no domínio, garantindo compatibilidade com SQLite e portabilidade futura.
+     *  </p>
      * @param entity entidade a ser convertida
      * @return objeto {@link SimulacaoInvestimento} domínio preenchido
      */
     public SimulacaoInvestimento toDomain(SimulacaoInvestimentoEntity entity) {
         return new SimulacaoInvestimento(
-                entity.getId(),
-                entity.getCliente().getId(),
+                entity.getId() != null ? entity.getId().longValue() : null,
+                entity.getCliente().getId() != null ? entity.getCliente().getId().longValue() : null,
                 produtoMapper.toDomain(entity.getProduto()),
                 new ResultadoSimulacao(
                         entity.getValorInvestido(),

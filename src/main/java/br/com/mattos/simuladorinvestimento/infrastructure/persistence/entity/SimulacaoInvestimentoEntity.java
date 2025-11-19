@@ -25,9 +25,18 @@ import java.time.LocalDate;
 public class SimulacaoInvestimentoEntity {
 
 
+    /**
+     * Identificador da simulação.
+     * <p>
+     * OBSERVAÇÃO: Está como {@link Integer} devido a erro do SQLite com Hibernate ORM para IDs gerados automaticamente (IDENTITY).
+     * Tentar usar {@link Long} com @Id + @GeneratedValue causa problemas de DDL, fazendo com que a coluna perca o tipo no banco.
+     * </p>
+     * <p>
+     * No domínio e DTOs, esse ID será representado como {@link Long} para permitir maior portabilidade e segurança futura.
+     * </p>
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     /**
@@ -38,9 +47,8 @@ public class SimulacaoInvestimentoEntity {
      * Isso faz com que FKs venham antes do ID. Se o nome da FK vier alfabeticamente antes de "id", o Hibernate gera um DDL incorreto (ex.: coluna "id," sem tipo).
      * Para evitar esse bug, as FKs dessa entidade estão sendo nomeadas com o padrão: id_<entidade>  id_produto
      */
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_produto")
+    @JoinColumn(name = "id_produto", nullable = false)
     private ProdutoEntity produto;
 
     /**
@@ -52,9 +60,8 @@ public class SimulacaoInvestimentoEntity {
      * Para evitar esse bug, as FKs dessa entidade estão sendo nomeadas com o padrão: id_<entidade>  id_cliente
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_cliente")
+    @JoinColumn(name = "id_cliente", nullable = false)
     private ClienteEntity cliente;
-
 
     @Column(name = "valor_investido", nullable = false)
     private Double valorInvestido;

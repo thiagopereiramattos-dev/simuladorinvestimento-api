@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Serviço responsável pelo gerenciamento de produtos.
+ * Serviço responsável pelas operações de consulta de produtos.
  */
 @ApplicationScoped
 public class ProdutoService {
@@ -21,11 +21,9 @@ public class ProdutoService {
     ProdutoRepository produtoRepository;
 
     /**
-     * Retorna todos os produtos disponíveis no repositório.
+     * Retorna todos os produtos cadastrados.
      *
-     * @return uma lista de {@link Produto} contendo todos os produtos encontrados.
-     *  A lista estará vazia se não houver produtos cadastrados.
-     * @throws RuntimeException caso ocorra algum erro interno ao acessar o repositório
+     * @return lista de {@link Produto}; pode estar vazia caso não existam registros.
      */
     public List<Produto> listarTodos() {
 

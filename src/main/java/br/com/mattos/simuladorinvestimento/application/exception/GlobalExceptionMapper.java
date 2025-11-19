@@ -43,21 +43,5 @@ public class GlobalExceptionMapper extends BaseExceptionHandler implements Excep
                 "Ocorreu um erro interno no servidor.",
                 uriInfo
         );
-
-//        if (exception instanceof NotFoundException) {
-//            LOGGER.warn("Recurso não encontrado: {}", path);
-//
-//            return buildResponse(Response.Status.NOT_FOUND,
-//                    ErrorType.RECURSO_NAO_ENCONTRADO.getMensagemPadrao(),
-//                    uriInfo);
-//        }
-//
-//        LOGGER.error("Erro inesperado na API | Path: {}", path, exception);
-//
-//        return buildResponse(
-//                Response.Status.INTERNAL_SERVER_ERROR,
-//                ErrorType.ERRO_INTERNO.getMensagemPadrao(),
-//                uriInfo
-//        );
     }
 }

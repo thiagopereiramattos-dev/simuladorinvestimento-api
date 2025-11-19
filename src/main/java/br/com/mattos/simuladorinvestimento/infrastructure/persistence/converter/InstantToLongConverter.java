@@ -6,11 +6,12 @@ import jakarta.persistence.Converter;
 import java.time.Instant;
 
 /**
- * Conversor JPA que transforma objetos {@link Instant} em {@link Long} para persistência no banco de dados e vice-versa.
+ * Conversor JPA que transforma {@link Instant} em {@link Long} (epoch millis) para persistência,
+ * garantindo compatibilidade com bancos que não suportam tipos de data/hora com fuso horário.
+ *
  * <p>
- * Este conversor armazena a data/hora como milissegundos desde a época (Epoch).
- * A anotação {@code @Converter(autoApply = true)} garante que ele seja aplicado
- * automaticamente a todos os atributos do tipo {@link Instant} nas entidades JPA.
+ * A anotação {@code @Converter(autoApply = true)} faz com que o conversor seja automaticamente
+ * aplicado a todos os atributos do tipo {@link Instant} nas entidades JPA.
  * </p>
  */
 @Converter(autoApply = true)

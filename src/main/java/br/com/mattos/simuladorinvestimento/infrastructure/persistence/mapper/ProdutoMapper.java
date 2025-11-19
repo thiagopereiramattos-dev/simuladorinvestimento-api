@@ -15,6 +15,8 @@ import java.util.Optional;
  * Mapper responsável por converter entre a entidade {@link ProdutoEntity} e o objeto de domínio {@link Produto}.
  * <p>
  * Trata validações básicas, como risco e tipo do produto, lançando exceções caso valores obrigatórios não estejam definidos.
+ * Além disso, faz a conversão de ID {@link Integer} (entidade) para {@link Long} (domínio/DTO),
+ * mantendo consistência com a abordagem adotada para lidar com SQLite + Hibernate.
  * </p>
  */
 public class ProdutoMapper {
@@ -22,6 +24,9 @@ public class ProdutoMapper {
 
     /**
      * Converte uma entidade {@link ProdutoEntity} em um objeto de domínio {@link Produto}.
+     * <p>
+     * Realiza a conversão de ID de {@link Integer} para {@link Long} para consistência com o domínio/DTO.
+     * </p>
      *
      * @param entity a entidade a ser convertida
      * @return objeto de domínio equivalente, ou {@code null} se a entidade for {@code null}
@@ -43,7 +48,7 @@ public class ProdutoMapper {
         }
 
         return new Produto(
-                entity.getId(),
+                entity.getId() != null ? entity.getId().longValue() : null,
                 entity.getNome(),
                 tipo,
                 entity.getRentabilidade(),
@@ -54,6 +59,9 @@ public class ProdutoMapper {
 
     /**
      * Converte um objeto de domínio {@link Produto} em uma entidade {@link ProdutoEntity}.
+     * <p>
+     * Faz a conversão de ID de {@link Long} para {@link Integer} para compatibilidade com SQLite.
+     * </p>
      *
      * @param produto objeto de domínio a ser convertido
      * @return entidade equivalente pronta para persistência, ou {@code null} se o objeto for {@code null}
@@ -67,7 +75,7 @@ public class ProdutoMapper {
 
         var entity = new ProdutoEntity();
 
-        entity.setId(produto.id());
+        entity.setId(produto.id() != null ? produto.id().intValue() : null);
         entity.setNome(produto.nome());
 
         var tipoProdutoEntity = new TipoProdutoEntity();
