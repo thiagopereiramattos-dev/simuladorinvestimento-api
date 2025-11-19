@@ -19,11 +19,12 @@ public abstract class BaseExceptionHandler {
      * @return Objeto Response pronto para ser retornado pelo mapper.
      */
     protected Response buildResponse(Response.Status status, String mensagem, UriInfo uriInfo) {
+        String path = (uriInfo != null) ? uriInfo.getPath() : "desconhecido";
         ApiErrorResponse error = new ApiErrorResponse(
                 status.getStatusCode(),
                 status.getReasonPhrase(),
                 mensagem,
-                uriInfo.getPath(),
+                path,
                 Instant.now()
         );
         return Response.status(status).entity(error).build();

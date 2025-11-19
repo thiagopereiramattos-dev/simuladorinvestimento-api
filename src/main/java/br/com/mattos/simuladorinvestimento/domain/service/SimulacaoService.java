@@ -1,10 +1,8 @@
 package br.com.mattos.simuladorinvestimento.domain.service;
 
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
-import br.com.mattos.simuladorinvestimento.domain.model.Produto;
-import br.com.mattos.simuladorinvestimento.domain.model.ResultadoSimulacao;
-import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoEntrada;
-import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
+import br.com.mattos.simuladorinvestimento.domain.exception.SimulacaoNaoEncontradaException;
+import br.com.mattos.simuladorinvestimento.domain.model.*;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.SimulacaoInvestimentoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -59,6 +57,7 @@ public class SimulacaoService {
             Double valorFinal = entrada.valor() * (1 + produto.rentabilidade());
 
             ResultadoSimulacao resultado = new ResultadoSimulacao(
+                    entrada.valor(),
                     valorFinal,
                     produto.rentabilidade(),
                     entrada.prazoMeses()
@@ -82,11 +81,11 @@ public class SimulacaoService {
 
             return simulacao;
 
-        } catch (ProdutoNaoEncontradoException e) {
-            throw e; // mantém a exceção específica
-        } catch (Exception e) {
-            LOGGER.error("Erro ao simular investimento para clienteId={}", entrada.clienteId(), e);
-            throw new RuntimeException("Não foi possível realizar a simulação. Ocorreu um erro interno.", e);
+        } catch (ProdutoNaoEncontradoException exNaoEncontrado) {
+            throw exNaoEncontrado;
+        } catch (Exception ex) {
+            LOGGER.error("Erro ao simular investimento para clienteId={}", entrada.clienteId(), ex);
+            throw new RuntimeException("Não foi possível realizar a simulação. Ocorreu um erro interno.", ex);
         }
     }
 
@@ -99,9 +98,36 @@ public class SimulacaoService {
     public List<SimulacaoInvestimento> listarSimulacoes() {
         try {
             return simulacaoInvestimentoRepository.listar();
-        } catch (Exception e) {
-            LOGGER.error("Erro ao listar simulações", e);
-            throw new RuntimeException("Não foi possível listar as simulações. Ocorreu um erro interno.", e);
+        } catch (Exception ex) {
+            LOGGER.error("Erro ao listar simulações", ex);
+            throw new RuntimeException("Não foi possível listar as simulações. Ocorreu um erro interno.", ex);
+        }
+    }
+
+    /**
+     * Lista as simulações agrupadas por produto e dia, retornando quantidade de simulações
+     * e média do valor final.
+     *
+     * @return Lista de {@link ResultadoConsultaSimulacaoPorDia} contendo dados agregados por produto e dia
+     * @throws SimulacaoNaoEncontradaException caso não existam simulações registradas
+     * @throws RuntimeException em caso de erro ao acessar o repositório
+     */
+    public List<ResultadoConsultaSimulacaoPorDia> listarSimulacoesPorProdutoEDia() {
+        try {
+            List<ResultadoConsultaSimulacaoPorDia> resultados = simulacaoInvestimentoRepository.listarPorProdutoEDia();
+
+            if (resultados.isEmpty()) {
+                LOGGER.warn("Nenhuma simulação encontrada para consulta por produto e dia");
+                throw new SimulacaoNaoEncontradaException("Nenhuma simulação encontrada");
+            }
+
+            LOGGER.info("Retornando {} resultados agregados por produto e dia", resultados.size());
+            return resultados;
+        } catch (SimulacaoNaoEncontradaException exNaoEncontrada) {
+            throw exNaoEncontrada;
+        } catch (Exception ex) {
+            LOGGER.error("Erro ao consultar simulações por produto e dia", ex);
+            throw new RuntimeException("Não foi possível consultar simulações. Ocorreu um erro interno.", ex);
         }
     }
 }

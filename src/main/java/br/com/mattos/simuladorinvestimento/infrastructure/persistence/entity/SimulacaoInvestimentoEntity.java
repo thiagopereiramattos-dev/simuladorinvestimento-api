@@ -55,8 +55,8 @@ public class SimulacaoInvestimentoEntity {
     private ClienteEntity cliente;
 
 
-    @Column(name = "valor_inicial9", nullable = false)
-    private Double valorInicial;
+    @Column(name = "valor_investido", nullable = false)
+    private Double valorInvestido;
 
     @Column(name = "valor_final", nullable = false)
     private Double valorFinal;

@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper;
 
+import br.com.mattos.simuladorinvestimento.domain.model.ResultadoConsultaSimulacaoPorDia;
 import br.com.mattos.simuladorinvestimento.domain.model.ResultadoSimulacao;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ClienteEntity;
@@ -7,6 +8,8 @@ import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.Sim
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 /**
@@ -43,7 +46,7 @@ public class SimulacaoMapper {
 
         double valorFinal = simulacao.resultado().valorFinal();
         double rentabilidade = simulacao.resultado().rentabilidadeEfetiva();
-        entity.setValorInicial(valorFinal / (1 + rentabilidade));
+        entity.setValorInvestido(simulacao.resultado().valorInvestido());
         entity.setValorFinal(valorFinal);
         entity.setRentabilidade(rentabilidade);
         entity.setPrazo(simulacao.resultado().prazoMeses());
@@ -71,11 +74,47 @@ public class SimulacaoMapper {
                 entity.getCliente().getId(),
                 produtoMapper.toDomain(entity.getProduto()),
                 new ResultadoSimulacao(
+                        entity.getValorInvestido(),
                         entity.getValorFinal(),
                         entity.getRentabilidade(),
                         entity.getPrazo()
                 ),
                 entity.getDataSimulacao()
+        );
+    }
+
+    /**
+     * Converte a linha da consulta JPQL (Object[]) para {@link ResultadoConsultaSimulacaoPorDia}.
+     *
+     * @param row Array contendo [nomeProduto, dataSimulacao (Instant), quantidade, mediaValorFinal]
+     * @return objeto {@link ResultadoConsultaSimulacaoPorDia}
+     */
+//    public ResultadoConsultaSimulacaoPorDia toResultadoConsultaPorDia(Object[] row) {
+//        String produto = (String) row[0];
+//        java.sql.Date dataSimulacao = (java.sql.Date) row[1]; // agora é Date
+//        Long quantidade = (Long) row[2];
+//        Double mediaValorFinal = (Double) row[3];
+//
+//        return new ResultadoConsultaSimulacaoPorDia(
+//                produto,
+//                dataSimulacao.toLocalDate(),
+//                quantidade,
+//                mediaValorFinal
+//        );
+//    }
+
+    public ResultadoConsultaSimulacaoPorDia toResultadoConsultaPorDia(Object[] row) {
+
+        String nomeProduto = (String) row[0];
+        String dataString = (String) row[1];      // VEM DO strftime → yyyy-MM-dd
+        Long quantidade = ((Number) row[2]).longValue();
+        Double mediaValorFinal = ((Number) row[3]).doubleValue();
+
+        return new ResultadoConsultaSimulacaoPorDia(
+                nomeProduto,
+                LocalDate.parse(dataString),        // converte a string para data
+                quantidade,
+                mediaValorFinal
         );
     }
 }

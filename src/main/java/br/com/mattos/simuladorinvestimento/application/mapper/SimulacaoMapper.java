@@ -75,7 +75,7 @@ public class SimulacaoMapper {
                 simulacao.idSimulacao(),
                 simulacao.clientId(),
                 simulacao.produto().nome(),
-                simulacao.resultado().valorFinal() / (1 + simulacao.resultado().rentabilidadeEfetiva()),
+                simulacao.resultado().valorInvestido(),
                 simulacao.resultado().valorFinal(),
                 simulacao.resultado().prazoMeses(),
                 simulacao.dataSimulacao()
@@ -95,6 +95,21 @@ public class SimulacaoMapper {
         return simulacoes.stream()
                 .map(this::toListResponse)
                 .toList();
+    }
+
+    /**
+     * Converte um objeto de domínio {@link ResultadoConsultaSimulacaoPorDia} em um DTO de resposta {@link SimulacaoPorProdutoDiaResponseDTO}.
+     *
+     * @param resultado Objeto de domínio ResultadoConsultaSimulacaoPorDia
+     * @return DTO SimulacaoPorProdutoDiaResponseDTO
+     */
+    public SimulacaoPorProdutoDiaResponseDTO toResponsePorProdutoDia(ResultadoConsultaSimulacaoPorDia resultado) {
+        return new SimulacaoPorProdutoDiaResponseDTO(
+                resultado.produto(),
+                resultado.data(),
+                resultado.quantidadeSimulacoes(),
+                resultado.mediaValorFinal()
+        );
     }
 
 }

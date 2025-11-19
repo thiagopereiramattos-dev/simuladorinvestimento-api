@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.repository;
 
+import br.com.mattos.simuladorinvestimento.domain.model.ResultadoConsultaSimulacaoPorDia;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
 import br.com.mattos.simuladorinvestimento.domain.repository.SimulacaoInvestimentoRepository;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.SimulacaoInvestimentoEntity;
@@ -54,6 +55,46 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
         return panacheRepo.listAll()
                 .stream()
                 .map(mapper::toDomain)
+                .toList();
+    }
+
+//    @Override
+//    public List<ResultadoConsultaSimulacaoPorDia> listarPorProdutoEDia() {
+//        List<Object[]> results = panacheRepo.getEntityManager()
+//                .createQuery(
+//                        "SELECT s.produto.nome, FUNCTION('date', s.dataSimulacao), COUNT(s), AVG(s.valorFinal) " +
+//                                "FROM SimulacaoInvestimentoEntity s " +
+//                                "GROUP BY s.produto.nome, FUNCTION('date', s.dataSimulacao) " +
+//                                "ORDER BY FUNCTION('date', s.dataSimulacao) DESC",
+//                        Object[].class
+//                )
+//                .getResultList();
+//
+//        return results.stream()
+//                .map(mapper::toResultadoConsultaPorDia)
+//                .toList();
+//    }
+
+    @Override
+    public List<ResultadoConsultaSimulacaoPorDia> listarPorProdutoEDia() {
+
+        // SQLite grava Instant como epochMilli → precisa dividir por 1000
+        String sql =
+                "SELECT s.produto.nome, " +
+                        "       FUNCTION('strftime', '%Y-%m-%d', s.dataSimulacao / 1000, 'unixepoch'), " +
+                        "       COUNT(s), " +
+                        "       AVG(s.valorFinal) " +
+                        "FROM SimulacaoInvestimentoEntity s " +
+                        "GROUP BY s.produto.nome, " +
+                        "         FUNCTION('strftime', '%Y-%m-%d', s.dataSimulacao / 1000, 'unixepoch') " +
+                        "ORDER BY FUNCTION('strftime', '%Y-%m-%d', s.dataSimulacao / 1000, 'unixepoch') DESC";
+
+        List<Object[]> results = panacheRepo.getEntityManager()
+                .createQuery(sql, Object[].class)
+                .getResultList();
+
+        return results.stream()
+                .map(mapper::toResultadoConsultaPorDia)
                 .toList();
     }
 }
