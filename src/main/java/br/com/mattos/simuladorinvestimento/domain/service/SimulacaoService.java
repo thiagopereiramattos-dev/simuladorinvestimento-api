@@ -98,12 +98,29 @@ public class SimulacaoService {
      *
      * @return lista de {@link SimulacaoInvestimento}; pode estar vazia.
      */
-    @TelemetriaMonitor
     public List<SimulacaoInvestimento> listarSimulacoes() {
 
         LOGGER.debug("Iniciando consulta de todas as simulações");
         try {
             List<SimulacaoInvestimento> lista = simulacaoInvestimentoRepository.listar();
+            LOGGER.debug("Total de simulações retornadas: {}", lista.size());
+            return lista;
+        } catch (Exception ex) {
+            LOGGER.error("Erro ao listar simulações", ex);
+            throw new RuntimeException("Não foi possível listar as simulações. Ocorreu um erro interno.", ex);
+        }
+    }
+
+    /**
+     * Retorna todas as simulações já realizadas.
+     *
+     * @return lista de {@link SimulacaoInvestimento}; pode estar vazia.
+     */
+    public List<SimulacaoInvestimento> listarSimulacoesPorCliente(Long idCLiente) {
+
+        LOGGER.debug("Iniciando consulta de todas as simulações");
+        try {
+            List<SimulacaoInvestimento> lista = simulacaoInvestimentoRepository.listarPorCliente(idCLiente);
             LOGGER.debug("Total de simulações retornadas: {}", lista.size());
             return lista;
         } catch (Exception ex) {

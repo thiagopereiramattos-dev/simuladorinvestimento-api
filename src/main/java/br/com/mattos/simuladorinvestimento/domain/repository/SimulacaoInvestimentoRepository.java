@@ -22,6 +22,12 @@ public interface SimulacaoInvestimentoRepository {
     List<SimulacaoInvestimento> listar();
 
     /**
+     * Lista todas as simulações registradas.
+     * @return Lista de SimulacaoInvestimento contendo todas simulacoes
+     */
+    List<SimulacaoInvestimento> listarPorCliente(Long clientId);
+
+    /**
      * Lista as simulações agrupadas por produto e dia,retornando quantidade de simulações e média do valor final.
      * @return Lista de ResultadoConsultaSimulacaoPorDia contendo informações agregadas por produto e dia
      */

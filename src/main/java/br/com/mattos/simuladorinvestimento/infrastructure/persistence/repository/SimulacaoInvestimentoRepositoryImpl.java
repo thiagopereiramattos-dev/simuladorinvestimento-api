@@ -1,5 +1,7 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.repository;
 
+import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
+import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.domain.model.ResultadoConsultaSimulacaoPorDia;
 import br.com.mattos.simuladorinvestimento.domain.model.SimulacaoInvestimento;
 import br.com.mattos.simuladorinvestimento.domain.repository.SimulacaoInvestimentoRepository;
@@ -63,6 +65,19 @@ public class SimulacaoInvestimentoRepositoryImpl implements SimulacaoInvestiment
      */
     public List<SimulacaoInvestimento> listar() {
         return panacheRepo.listAll()
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    /**
+     * Lista todas as simulações de investimento de um cliente
+     *
+     * @return lista de simulações no domínio
+     */
+    @Override
+    public List<SimulacaoInvestimento> listarPorCliente(Long clientId) {
+        return panacheRepo.list("cliente.id", clientId)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

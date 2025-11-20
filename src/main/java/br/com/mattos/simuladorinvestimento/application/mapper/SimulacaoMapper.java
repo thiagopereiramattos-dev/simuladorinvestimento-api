@@ -46,7 +46,7 @@ public class SimulacaoMapper {
                 simulacao.produto().nome(),
                 simulacao.produto().tipo(),
                 simulacao.produto().rentabilidade(),
-                simulacao.produto().risco()
+                simulacao.produto().risco().getDescricao()
         );
 
         ResultadoSimulacaoResponseDTO resultado = new ResultadoSimulacaoResponseDTO(
@@ -115,4 +115,23 @@ public class SimulacaoMapper {
         );
     }
 
+
+    public List<SimulacaoInvestimentoClienteDTO> toResponseSimulacaoClienteList(List<SimulacaoInvestimento> simulacoes) {
+        return simulacoes.stream()
+                .map(this::toResponseSimulacaoCliente)
+                .toList();
+    }
+
+    public SimulacaoInvestimentoClienteDTO toResponseSimulacaoCliente(SimulacaoInvestimento simulacao) {
+        return new SimulacaoInvestimentoClienteDTO(
+                simulacao.idSimulacao(),
+                simulacao.produto().tipo(),
+                formatDecimal.format(simulacao.resultado().valorInvestido()),
+                simulacao.resultado().rentabilidadeEfetiva(),
+                simulacao.dataSimulacao()
+                        .atZone(ZoneId.of("America/Sao_Paulo"))
+                        .toLocalDate()
+                        .toString()
+        );
+    }
 }

@@ -1,6 +1,7 @@
 package br.com.mattos.simuladorinvestimento.application.resource;
 
 import br.com.mattos.simuladorinvestimento.application.dto.request.SimularInvestimentoRequestDTO;
+import br.com.mattos.simuladorinvestimento.application.dto.response.SimulacaoInvestimentoClienteDTO;
 import br.com.mattos.simuladorinvestimento.application.dto.response.SimulacaoListResponseDTO;
 import br.com.mattos.simuladorinvestimento.application.dto.response.SimulacaoPorProdutoDiaResponseDTO;
 import br.com.mattos.simuladorinvestimento.application.dto.response.SimularInvestimentoResponseDTO;
@@ -79,5 +80,19 @@ public class SimulacaoInvestimentoResource {
         return resultados.stream()
                 .map(mapper::toResponsePorProdutoDia)
                 .toList();
+    }
+
+    /**
+     * Endpoint para listar todas as simulações realizadas.
+     *
+     * @return Lista de {@link SimulacaoListResponseDTO} com informações resumidas das simulações
+     */
+    @GET
+    @Path("/simulacoes/cliente/{clienteId}")
+    public List<SimulacaoInvestimentoClienteDTO> listarSimulacoesPorIdCliente(@PathParam("clienteId") Long idCliente) {
+        LOGGER.info("Requisição recebida: listar simulações");
+        List<SimulacaoInvestimento> simulacoes = simulacaoService.listarSimulacoesPorCliente(idCliente);
+        LOGGER.info("Retornando {} simulações", simulacoes.size());
+        return mapper.toResponseSimulacaoClienteList(simulacoes);
     }
 }
