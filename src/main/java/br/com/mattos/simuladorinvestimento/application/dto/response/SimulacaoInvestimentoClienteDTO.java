@@ -5,6 +5,6 @@ public record SimulacaoInvestimentoClienteDTO(
         String tipo,
         String valor,
         Double rentabilidade,
-        String dataSimulacao
+        String data
 ) {}
 

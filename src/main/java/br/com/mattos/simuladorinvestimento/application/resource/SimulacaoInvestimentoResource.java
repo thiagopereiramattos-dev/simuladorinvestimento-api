@@ -88,7 +88,7 @@ public class SimulacaoInvestimentoResource {
      * @return Lista de {@link SimulacaoListResponseDTO} com informações resumidas das simulações
      */
     @GET
-    @Path("/simulacoes/cliente/{clienteId}")
+    @Path("/investimentos/{clienteId}")
     public List<SimulacaoInvestimentoClienteDTO> listarSimulacoesPorIdCliente(@PathParam("clienteId") Long idCliente) {
         LOGGER.info("Requisição recebida: listar simulações");
         List<SimulacaoInvestimento> simulacoes = simulacaoService.listarSimulacoesPorCliente(idCliente);

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * Recurso REST responsável por gerenciar operações relacionadas aos produtos.
  * Expõe os endpoints de produtos.
  */
-@Path("/produtos")
+@Path("/")
 @Consumes("application/json")
 @Produces("application/json")
 public class ProdutoResource {
@@ -32,6 +32,7 @@ public class ProdutoResource {
      * @return Lista de {@link ProdutoResponseDTO} representando os produtos.
      */
     @GET
+    @Path("/produtos")
     public List<ProdutoResponseDTO> listar() {
         LOGGER.info("Requisição recebida: listar todos produtos");
         List<Produto> produtos = produtoService.listarProdutos();
@@ -40,7 +41,7 @@ public class ProdutoResource {
     }
 
     @GET
-    @Path("/recomendados/{perfil}")
+    @Path("/produtos-recomendados/{perfil}")
     public List<ProdutoResponseDTO> listarProdutosRecomendados(@PathParam("perfil") String perfil) {
         LOGGER.info("Requisição recebida: produtos recomendados para o perfil {}", perfil);
         List<Produto> produtos = produtoService.listarProdutosRecomendados(perfil);

@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.application.mapper;
 
+import br.com.mattos.simuladorinvestimento.application.dto.response.PeriodoTelemetriaDTO;
 import br.com.mattos.simuladorinvestimento.application.dto.response.ServicoTelemetriaDTO;
 import br.com.mattos.simuladorinvestimento.application.dto.response.TelemetriaResponseDTO;
 import br.com.mattos.simuladorinvestimento.domain.model.Telemetria;
@@ -37,6 +38,7 @@ public class TelemetriaResponseMapper {
             servicos.add(servicoDTO);
         }
 
-        return new TelemetriaResponseDTO(servicos, dataInicio, dataFim);
+        PeriodoTelemetriaDTO periodo = new PeriodoTelemetriaDTO(dataInicio, dataFim);
+        return new TelemetriaResponseDTO(servicos, periodo);
     }
 }

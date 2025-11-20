@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Recurso REST responsável por expor endpoints de clientes.
  */
-@Path("/clientes")
+@Path("/")
 @Consumes("application/json")
 @Produces("application/json")
 public class ClienteResource {
