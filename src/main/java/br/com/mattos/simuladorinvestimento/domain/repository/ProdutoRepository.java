@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.domain.repository;
 
+import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface ProdutoRepository {
 
     /** Lista todos os produtos disponíveis. */
     List<Produto> listarTodos();
+
+    List<Produto> listarPorRisco(RiscoProduto risco);
 }

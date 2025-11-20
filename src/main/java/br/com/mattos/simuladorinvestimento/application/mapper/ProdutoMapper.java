@@ -24,7 +24,7 @@ public class ProdutoMapper {
                 p.nome(),
                 p.tipo(),
                 p.rentabilidade(),
-                p.risco()
+                p.risco().getDescricao()
         );
     }
 

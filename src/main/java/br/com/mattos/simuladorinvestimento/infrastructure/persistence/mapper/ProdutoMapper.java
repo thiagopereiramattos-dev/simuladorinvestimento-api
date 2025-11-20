@@ -54,7 +54,7 @@ public class ProdutoMapper {
                 entity.getNome(),
                 tipo,
                 entity.getRentabilidade(),
-                riscoEnum.getDescricao()
+                riscoEnum
         );
     }
 
@@ -84,11 +84,12 @@ public class ProdutoMapper {
         tipoProdutoEntity.setNome(produto.tipo());
         entity.setTipo(tipoProdutoEntity);
 
-        try {
-            entity.setRisco(RiscoProduto.valueOf(produto.risco().toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            throw new RiscoProdutoInvalidoException("Risco inválido: " + produto.risco());
-        }
+        entity.setRisco(produto.risco());
+//        try {
+//            entity.setRisco(RiscoProduto.valueOf(produto.risco().toUpperCase()));
+//        } catch (IllegalArgumentException e) {
+//            throw new RiscoProdutoInvalidoException("Risco inválido: " + produto.risco());
+//        }
 
         entity.setRentabilidade(produto.rentabilidade());
         return entity;

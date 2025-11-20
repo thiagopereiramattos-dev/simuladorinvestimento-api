@@ -38,4 +38,13 @@ public class ProdutoResource {
         LOGGER.info("Retornando {} produtos", produtos.size());
         return mapper.toResponseList(produtos);
     }
+
+    @GET
+    @Path("/recomendados/{perfil}")
+    public List<ProdutoResponseDTO> listarProdutosRecomendados(@PathParam("perfil") String perfil) {
+        LOGGER.info("Requisição recebida: produtos recomendados para o perfil {}", perfil);
+        List<Produto> produtos = produtoService.listarProdutosRecomendados(perfil);
+        LOGGER.info("Retornando {} produtos recomendados", produtos.size());
+        return mapper.toResponseList(produtos);
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.repository;
 
+import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper.ProdutoMapper;
@@ -7,6 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -46,4 +48,18 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
                 .map(mapper::toDomain)
                 .toList();
     }
+
+    /**
+     * Lista todos os produtos disponíveis para o risco informado.
+     *
+     * @return lista de produtos no domínio
+     */
+    @Override
+    public List<Produto> listarPorRisco(RiscoProduto risco) {
+        return panacheRepo.list("risco", risco)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
 }
