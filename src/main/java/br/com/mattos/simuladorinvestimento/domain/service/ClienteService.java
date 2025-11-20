@@ -1,5 +1,7 @@
 package br.com.mattos.simuladorinvestimento.domain.service;
 
+import br.com.mattos.simuladorinvestimento.domain.exception.ClienteNaoEncontradoException;
+import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
 import br.com.mattos.simuladorinvestimento.domain.model.ClientePerfilRisco;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.domain.repository.ClienteRepository;
@@ -41,8 +43,10 @@ public class ClienteService {
                 return perfilOpt.get();
             } else {
                 LOGGER.warn("Nenhum perfil de risco encontrado para o cliente ID: {}", clientId);
-                return null;
+                throw new ClienteNaoEncontradoException(clientId.toString());
             }
+        } catch (ClienteNaoEncontradoException exception) {
+            throw exception;
         } catch (Exception ex) {
             LOGGER.error("Erro ao buscar perfil de risco para o cliente ID: {}", clientId, ex);
             throw new RuntimeException( "Não foi possível consultar o perfil de risco do cliente. Ocorreu um erro interno.", ex);

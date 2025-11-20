@@ -70,21 +70,11 @@ public class ClienteRepositoryImpl implements ClienteRepository {
                 .find("id", idCliente.intValue())
                 .firstResultOptional();
 
-        if (clienteEntityOpt.isEmpty()) return Optional.empty();
+        if (clienteEntityOpt.isEmpty()){
+            return Optional.empty();
+        }
 
         ClienteEntity clienteEntity = clienteEntityOpt.get();
         return Optional.of(mapper.toClientePerfilRisco(clienteEntity));
-
-//        return panacheRepo.find("id", idCliente.intValue())
-//                .firstResultOptional()
-//                .map(cliente -> {
-//                    var perfil = cliente.getPerfilRisco();
-//                    return new ClientePerfilRisco(
-//                            cliente.getId().longValue(),
-//                            perfil.getNome(),
-//                            perfil.getPontuacao(),
-//                            perfil.getDescricao()
-//                    );
-//                });
     }
 }

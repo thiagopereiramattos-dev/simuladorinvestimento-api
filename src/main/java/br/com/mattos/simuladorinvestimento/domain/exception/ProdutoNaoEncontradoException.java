@@ -3,7 +3,7 @@ package br.com.mattos.simuladorinvestimento.domain.exception;
 /**
  * Exceção lançada para quando não é encontrado um produto do tipo especificado.
  */
-public class ProdutoNaoEncontradoException extends RuntimeException {
+public class ProdutoNaoEncontradoException extends DomainException {
 
     /**
      * @param tipoProduto o tipo de produto que não foi encontrado

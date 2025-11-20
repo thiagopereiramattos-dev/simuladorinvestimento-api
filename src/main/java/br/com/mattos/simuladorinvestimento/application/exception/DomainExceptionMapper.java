@@ -1,7 +1,8 @@
 package br.com.mattos.simuladorinvestimento.application.exception;
 
 import br.com.mattos.simuladorinvestimento.domain.exception.ClienteNaoEncontradoException;
-import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoInvalidoException;
+import br.com.mattos.simuladorinvestimento.domain.exception.DomainException;
+import br.com.mattos.simuladorinvestimento.domain.exception.TipoProdutoInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -15,20 +16,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Mapper de exceções de domínio da aplicação.
  *
- * <p>Este mapper trata especificamente as exceções de negócio:
- * <ul>
- *     <li>{@link ProdutoNaoEncontradoException}: retorna HTTP 400 (Bad Request) com a mensagem da exceção.</li>
- *     <li>{@link ProdutoInvalidoException}: retorna HTTP 400 (Bad Request) com a mensagem da exceção.</li>
- * </ul>
- * </p>
- *
- * <p>Qualquer outra exceção de domínio (RuntimeException) que não seja tratada explicitamente
- * será convertida em HTTP 500 (Internal Server Error) lançando {@link WebApplicationException}.</p>
+ * <p>Este mapper captura todas as exceções que estendem {@link DomainException} e
+ * converte em uma resposta HTTP 400 (Bad Request) com a mensagem da exceção.</p>
  *
  * <p>As respostas de erro seguem o padrão {@link ApiErrorResponse} definido na aplicação.</p>
+ *
+ * <p>Qualquer outra exceção que não seja do tipo {@link DomainException} não será capturada por este mapper.</p>
  */
 @Provider
-public class DomainExceptionMapper extends BaseExceptionHandler implements ExceptionMapper<RuntimeException> {
+public class DomainExceptionMapper extends BaseExceptionHandler implements ExceptionMapper<DomainException> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DomainExceptionMapper.class);
 
@@ -36,28 +32,12 @@ public class DomainExceptionMapper extends BaseExceptionHandler implements Excep
     UriInfo uriInfo;
 
     @Override
-    public Response toResponse(RuntimeException exception) {
+    public Response toResponse(DomainException exception) {
+        LOGGER.info("Exceção de domínio: {}", exception.getMessage());
 
-        if (exception instanceof ProdutoNaoEncontradoException ex) {
-            LOGGER.info("Produto não encontrado: {}", ex.getMessage());
-            return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
-        }
-
-        if (exception instanceof ProdutoInvalidoException ex) {
-            LOGGER.info("Produto invalido: {}", ex.getMessage());
-            return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
-        }
-
-        if (exception instanceof ClienteNaoEncontradoException ex) {
-            LOGGER.info("Cliente não encontrado: {}", ex.getMessage());
-            return buildResponse(Response.Status.BAD_REQUEST, ex.getMessage(), uriInfo);
-        }
-
-        // Qualquer outra exceção de domínio NÃO deve lançar Exception.
-        LOGGER.error("Exceção de domínio não tratada", exception);
         return buildResponse(
-                Response.Status.INTERNAL_SERVER_ERROR,
-                "Erro interno ao processar domínio.",
+                Response.Status.BAD_REQUEST,
+                exception.getMessage(),
                 uriInfo
         );
     }

@@ -1,7 +1,8 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper;
 
 import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
-import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoInvalidoException;
+import br.com.mattos.simuladorinvestimento.domain.exception.TipoProdutoInvalidoException;
+import br.com.mattos.simuladorinvestimento.domain.exception.RiscoProdutoInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ProdutoEntity;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.TipoProdutoEntity;
@@ -30,7 +31,8 @@ public class ProdutoMapper {
      *
      * @param entity a entidade a ser convertida
      * @return objeto de domínio equivalente, ou {@code null} se a entidade for {@code null}
-     * @throws ProdutoInvalidoException se o tipo ou risco do produto não estiver definido
+     * @throws TipoProdutoInvalidoException se o tipo ou produto não estiver definido
+     * @throws RiscoProdutoInvalidoException se o o risco estiver invalido
      */
     public Produto toDomain(ProdutoEntity entity) {
 
@@ -38,13 +40,13 @@ public class ProdutoMapper {
             return null;
         }
 
-        String tipo = Optional.ofNullable(entity.getTipo())
+       String tipo = Optional.ofNullable(entity.getTipo())
                 .map(TipoProdutoEntity::getNome)
-                .orElseThrow(() -> new ProdutoInvalidoException("Tipo do produto não definido"));
+                .orElseThrow(() -> new TipoProdutoInvalidoException());
 
         RiscoProduto riscoEnum = entity.getRisco();
         if (riscoEnum == null) {
-            throw new ProdutoInvalidoException("Risco do produto não definido");
+            throw new RiscoProdutoInvalidoException("Risco do produto não definido");
         }
 
         return new Produto(
@@ -65,7 +67,7 @@ public class ProdutoMapper {
      *
      * @param produto objeto de domínio a ser convertido
      * @return entidade equivalente pronta para persistência, ou {@code null} se o objeto for {@code null}
-     * @throws ProdutoInvalidoException se o risco do produto for inválido
+     * @throws RiscoProdutoInvalidoException se o risco do produto for inválido
      */
     public ProdutoEntity toEntity(Produto produto) {
 
@@ -85,7 +87,7 @@ public class ProdutoMapper {
         try {
             entity.setRisco(RiscoProduto.valueOf(produto.risco().toUpperCase()));
         } catch (IllegalArgumentException e) {
-            throw new ProdutoInvalidoException("Risco inválido: " + produto.risco());
+            throw new RiscoProdutoInvalidoException("Risco inválido: " + produto.risco());
         }
 
         entity.setRentabilidade(produto.rentabilidade());

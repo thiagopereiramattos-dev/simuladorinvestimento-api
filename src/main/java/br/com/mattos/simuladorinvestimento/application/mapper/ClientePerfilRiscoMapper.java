@@ -18,8 +18,6 @@ public class ClientePerfilRiscoMapper {
      * @return DTO de resposta correspondente
      */
     public ClientePerfilRiscoResponseDTO toResponse(ClientePerfilRisco perfil) {
-        if (perfil == null) return null;
-
         return new ClientePerfilRiscoResponseDTO(
                 perfil.clientId(),
                 perfil.nomePerfil(),
