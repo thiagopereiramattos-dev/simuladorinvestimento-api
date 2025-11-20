@@ -12,8 +12,13 @@ import br.com.mattos.simuladorinvestimento.domain.service.SimulacaoService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +48,14 @@ public class SimulacaoInvestimentoResource {
     @POST
     @Path("/simular-investimento")
     @Operation(summary = "Simular Investimento", description = "Simula um investimento para o cliente com base no valor, prazo e tipo de produto")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Simulação realizada com sucesso",
+                    content = @Content(schema = @Schema(implementation = SimularInvestimentoResponseDTO.class))),
+            @APIResponse(responseCode = "400", description = "Tipo de Produtonão encontrado"),
+            @APIResponse(responseCode = "400", description = "Não existe cliente com esse id"),
+            @APIResponse(responseCode = "400", description = "Erros de validação"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public SimularInvestimentoResponseDTO simular(
             @Parameter(description = "DTO com dados da simulação", required = true)
             @Valid SimularInvestimentoRequestDTO request) {
@@ -65,6 +78,14 @@ public class SimulacaoInvestimentoResource {
     @GET
     @Path("/simulacoes")
     @Operation(summary = "Listar Simulações", description = "Lista todas as simulações realizadas")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Lista de simulações",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = SimulacaoListResponseDTO.class)
+                    )),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public List<SimulacaoListResponseDTO> listar() {
         LOGGER.info("Requisição recebida: listar simulações");
         List<SimulacaoInvestimento> simulacoes = simulacaoService.listarSimulacoes();
@@ -80,6 +101,14 @@ public class SimulacaoInvestimentoResource {
     @GET
     @Path("/simulacoes/por-produto-dia")
     @Operation(summary = "Listar Simulações por Produto e Dia", description = "Lista simulações agregadas por produto e dia, mostrando quantidade e média de valor final")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Lista de simulações agregadas",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = SimulacaoPorProdutoDiaResponseDTO.class)
+                    )),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public List<SimulacaoPorProdutoDiaResponseDTO> listarPorProdutoEDia() {
         LOGGER.info("Requisição recebida: listar simulações por produto e dia");
 
@@ -99,6 +128,14 @@ public class SimulacaoInvestimentoResource {
     @GET
     @Path("/investimentos/{clienteId}")
     @Operation(summary = "Listar Investimentos por Cliente", description = "Lista todas as simulações realizadas por um cliente específico")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Lista de simulações do cliente",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON,
+                            schema = @Schema(implementation = SimulacaoInvestimentoClienteDTO.class)
+                    )),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public List<SimulacaoInvestimentoClienteDTO> listarSimulacoesPorIdCliente(
             @Parameter(description = "ID do cliente para listar simulações", required = true)
             @PathParam("clienteId") Long idCliente) {

@@ -45,7 +45,7 @@ public class ClienteService {
                 return perfilOpt.get();
             } else {
                 LOGGER.warn("Nenhum perfil de risco encontrado para o cliente ID: {}", clientId);
-                throw new ClienteNaoEncontradoException(clientId.toString());
+                throw new ClienteNaoEncontradoException("Nenhum cliente encontrado com esse ID");
             }
         } catch (ClienteNaoEncontradoException exception) {
             throw exception;

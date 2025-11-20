@@ -9,7 +9,11 @@ import jakarta.ws.rs.*;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +43,11 @@ public class ProdutoResource {
     @GET
     @Path("/produtos")
     @Operation(summary = "Listar Produtos", description = "Lista Todos os Produtos existentes na aplicação")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Lista de produtos",
+                    content = @Content(schema = @Schema(implementation = ProdutoResponseDTO.class))),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public List<ProdutoResponseDTO> listar() {
         LOGGER.info("Requisição recebida: listar todos produtos");
         List<Produto> produtos = produtoService.listarProdutos();
@@ -49,6 +58,12 @@ public class ProdutoResource {
     @GET
     @Path("/produtos-recomendados/{perfil}")
     @Operation(summary = "Listar Produtos Recomendados", description = "Lista Todos os Produtos recomendados para o Perfil(nome Perfil) informado")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Lista de produtos recomendados",
+                    content = @Content(schema = @Schema(implementation = ProdutoResponseDTO.class))),
+            @APIResponse(responseCode = "400", description = "Perfil Invalido"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public List<ProdutoResponseDTO> listarProdutosRecomendados(
             @Parameter(description = "Perfil do cliente: Baixo, Médio ou Alto", required = true)
             @PathParam("perfil") String perfil) {

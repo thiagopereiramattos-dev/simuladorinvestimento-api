@@ -48,44 +48,23 @@ public class ProdutoService {
     }
 
     /**
-     * Retorna todos os produtos cadastrados.
+     * Retorna todos os produtos cadastrados para o perfil informado.
      *
      * @return lista de {@link Produto}; pode estar vazia caso não existam registros.
      */
     public List<Produto> listarProdutosRecomendados(String nomePerfilRisco) {
 
-//        RiscoProduto risco;
-//        try {
-//            risco = RiscoProduto.valueOf(nomePerfilRisco.toUpperCase(Locale.ROOT));
-//        } catch (IllegalArgumentException ex) {
-//            throw new PerfilInvalidoException(nomePerfilRisco);
-//        } catch (Exception ex) {
-//            LOGGER.error("Erro ao listar produtos por perfil de risco", ex);
-//            throw new RuntimeException("Não foi possível listar os produtos por perfil de risco. Ocorreu um erro interno.", ex);
-//        }
+        LOGGER.debug("Iniciando consulta de produtos recomendados para o risco informado: " + nomePerfilRisco);
+        try {
+            RiscoProduto risco = RiscoProduto.fromString(nomePerfilRisco);
+            List<Produto> produtos = produtoRepository.listarPorRisco(risco);
+            LOGGER.debug("Total de produtos encontrados: {}", produtos.size());
+            return produtos;
 
-        RiscoProduto risco = RiscoProduto.fromString(nomePerfilRisco);
-        return produtoRepository.listarPorRisco(risco);
+        } catch (Exception ex) {
+            LOGGER.error("Erro ao listar produtos", ex);
+            throw new RuntimeException("Não foi possível listar os produtos. Ocorreu um erro interno.", ex);
+        }
     }
-//    public List<Produto> listarProdutosRecomendados(String nomePerfilRisco) {
-//
-//        LOGGER.debug("Iniciando consulta de produtos recomendados");
-//        RiscoProduto riscoProduto;
-//        try {
-//            riscoProduto = RiscoProduto.valueOf(nomePerfilRisco.toUpperCase(Locale.ROOT));
-//
-//            return produtoRepository.listarTodos()
-//                    .stream()
-//                    .filter(p -> p.risco() == riscoProduto)
-//                    .collect(Collectors.toList());
-//
-//        } catch (PerfilInvalidoException ex) {
-//            throw new PerfilInvalidoException("Perfil Invalido para a consulta");
-//        } catch (Exception ex) {
-//            LOGGER.error("Erro ao listar produtos", ex);
-//            throw new RuntimeException("Não foi possível listar os produtos. Ocorreu um erro interno.", ex);
-//        }
-//    }
-
 
 }

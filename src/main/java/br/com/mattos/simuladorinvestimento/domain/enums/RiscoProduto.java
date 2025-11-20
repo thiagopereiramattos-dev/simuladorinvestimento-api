@@ -30,7 +30,7 @@ public enum RiscoProduto {
      */
     public static RiscoProduto fromString(String valor) {
         if (valor == null || valor.isBlank()) {
-            throw new PerfilInvalidoException("Perfil inválido: '" + valor + "'. Informe Baixo, Médio ou Alto.");
+            throw new PerfilInvalidoException(valor);
         }
 
         String normalizado = Normalizer

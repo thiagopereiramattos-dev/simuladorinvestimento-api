@@ -8,6 +8,10 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 /**
@@ -42,6 +46,13 @@ public class AuthResource {
     @POST
     @Path("/login")
     @Operation(summary = "Autentica cliente", description = "Valida credenciais e retorna token JWT")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Login realizado com sucesso",
+                    content = @Content(schema = @Schema(implementation = LoginResponseDTO.class))),
+            @APIResponse(responseCode = "400", description = "Não existe cliente com esse email"),
+            @APIResponse(responseCode = "400", description = "Senha inválida para o e-mail"),
+            @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public LoginResponseDTO login(LoginRequestDTO dto) {
         return mapper.toDTO(authService.autenticar(dto.email(), dto.senha()));
     }
