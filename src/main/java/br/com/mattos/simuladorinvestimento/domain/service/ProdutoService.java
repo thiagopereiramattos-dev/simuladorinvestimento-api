@@ -2,6 +2,7 @@ package br.com.mattos.simuladorinvestimento.domain.service;
 
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
+import br.com.mattos.simuladorinvestimento.infrastructure.telemetria.TelemetriaMonitor;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Serviço responsável pelas operações de consulta de produtos.
  */
+@TelemetriaMonitor
 @ApplicationScoped
 public class ProdutoService {
 
@@ -25,7 +27,7 @@ public class ProdutoService {
      *
      * @return lista de {@link Produto}; pode estar vazia caso não existam registros.
      */
-    public List<Produto> listarTodos() {
+    public List<Produto> listarProdutos() {
 
         LOGGER.debug("Iniciando consulta de todos os produtos");
         try {

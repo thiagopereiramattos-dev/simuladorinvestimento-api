@@ -6,6 +6,7 @@ import br.com.mattos.simuladorinvestimento.domain.model.*;
 import br.com.mattos.simuladorinvestimento.domain.repository.ClienteRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.SimulacaoInvestimentoRepository;
+import br.com.mattos.simuladorinvestimento.infrastructure.telemetria.TelemetriaMonitor;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Serviço responsável pela execução e consulta de simulações de investimento.
  */
+@TelemetriaMonitor
 @ApplicationScoped
 public class SimulacaoService {
 
@@ -96,6 +98,7 @@ public class SimulacaoService {
      *
      * @return lista de {@link SimulacaoInvestimento}; pode estar vazia.
      */
+    @TelemetriaMonitor
     public List<SimulacaoInvestimento> listarSimulacoes() {
 
         LOGGER.debug("Iniciando consulta de todas as simulações");

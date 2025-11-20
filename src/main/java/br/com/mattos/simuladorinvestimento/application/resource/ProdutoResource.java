@@ -34,7 +34,7 @@ public class ProdutoResource {
     @GET
     public List<ProdutoResponseDTO> listar() {
         LOGGER.info("Requisição recebida: listar todos produtos");
-        List<Produto> produtos = produtoService.listarTodos();
+        List<Produto> produtos = produtoService.listarProdutos();
         LOGGER.info("Retornando {} produtos", produtos.size());
         return mapper.toResponseList(produtos);
     }

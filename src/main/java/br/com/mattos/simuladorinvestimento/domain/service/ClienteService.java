@@ -6,6 +6,7 @@ import br.com.mattos.simuladorinvestimento.domain.model.ClientePerfilRisco;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 import br.com.mattos.simuladorinvestimento.domain.repository.ClienteRepository;
 import br.com.mattos.simuladorinvestimento.domain.repository.ProdutoRepository;
+import br.com.mattos.simuladorinvestimento.infrastructure.telemetria.TelemetriaMonitor;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import java.util.Optional;
 /**
  * Serviço responsável pelas operações de cliente.
  */
+@TelemetriaMonitor
 @ApplicationScoped
 public class ClienteService {
 
