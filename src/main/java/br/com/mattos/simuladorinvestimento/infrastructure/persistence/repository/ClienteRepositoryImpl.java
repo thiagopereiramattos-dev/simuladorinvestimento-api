@@ -65,16 +65,7 @@ public class ClienteRepositoryImpl implements ClienteRepository {
      */
     @Override
     public Optional<ClientePerfilRisco> buscarPerfilRiscoPorId(Long idCliente) {
-
-        Optional<ClienteEntity> clienteEntityOpt = panacheRepo
-                .find("id", idCliente.intValue())
-                .firstResultOptional();
-
-        if (clienteEntityOpt.isEmpty()){
-            return Optional.empty();
-        }
-
-        ClienteEntity clienteEntity = clienteEntityOpt.get();
-        return Optional.of(mapper.toClientePerfilRisco(clienteEntity));
+        return panacheRepo.findByIdOptional(idCliente)
+                .map(mapper::toClientePerfilRisco);
     }
 }
