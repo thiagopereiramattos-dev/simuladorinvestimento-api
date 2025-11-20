@@ -7,6 +7,10 @@ import br.com.mattos.simuladorinvestimento.domain.service.ProdutoService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import java.util.List;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +21,7 @@ import org.slf4j.LoggerFactory;
 @Path("/")
 @Consumes("application/json")
 @Produces("application/json")
+@Tag(name = "Produto", description = "Endpoints relacionados a Produto")
 public class ProdutoResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProdutoResource.class);
@@ -33,6 +38,7 @@ public class ProdutoResource {
      */
     @GET
     @Path("/produtos")
+    @Operation(summary = "Listar Produtos", description = "Lista Todos os Produtos existentes na aplicação")
     public List<ProdutoResponseDTO> listar() {
         LOGGER.info("Requisição recebida: listar todos produtos");
         List<Produto> produtos = produtoService.listarProdutos();
@@ -42,7 +48,10 @@ public class ProdutoResource {
 
     @GET
     @Path("/produtos-recomendados/{perfil}")
-    public List<ProdutoResponseDTO> listarProdutosRecomendados(@PathParam("perfil") String perfil) {
+    @Operation(summary = "Listar Produtos Recomendados", description = "Lista Todos os Produtos recomendados para o Perfil(nome Perfil) informado")
+    public List<ProdutoResponseDTO> listarProdutosRecomendados(
+            @Parameter(description = "Perfil do cliente: Baixo, Médio ou Alto", required = true)
+            @PathParam("perfil") String perfil) {
         LOGGER.info("Requisição recebida: produtos recomendados para o perfil {}", perfil);
         List<Produto> produtos = produtoService.listarProdutosRecomendados(perfil);
         LOGGER.info("Retornando {} produtos recomendados", produtos.size());

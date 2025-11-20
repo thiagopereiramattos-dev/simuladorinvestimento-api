@@ -7,6 +7,8 @@ import br.com.mattos.simuladorinvestimento.domain.service.ClienteAuthService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 /**
  * Recurso REST responsável pela autenticação de clientes.
@@ -18,6 +20,7 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/autenticacao")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Autenticação", description = "Endpoints relacionados à autenticação de clientes")
 public class AuthResource {
 
     @Inject
@@ -38,6 +41,7 @@ public class AuthResource {
      */
     @POST
     @Path("/login")
+    @Operation(summary = "Autentica cliente", description = "Valida credenciais e retorna token JWT")
     public LoginResponseDTO login(LoginRequestDTO dto) {
         return mapper.toDTO(authService.autenticar(dto.email(), dto.senha()));
     }

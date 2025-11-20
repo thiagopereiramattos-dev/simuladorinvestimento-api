@@ -7,6 +7,9 @@ import br.com.mattos.simuladorinvestimento.domain.service.TelemetriaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +23,7 @@ import java.util.List;
 @Path("/telemetria")
 @Consumes("application/json")
 @Produces("application/json")
+@Tag(name = "Telemetria", description = "Endpoints relacionados a Telemetria")
 public class TelemetriaResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelemetriaResource.class);
@@ -38,9 +42,10 @@ public class TelemetriaResource {
      * @return DTO {@link TelemetriaResponseDTO} contendo lista de serviços com métricas
      */
     @GET
+    @Operation(summary = "Consultar Telemetria", description = "Consulta a Telemetria dos servicos pela data informado ou 30 dias do mes atual")
     public Response consultarTelemetria(
-            @QueryParam("inicio") String inicio,
-            @QueryParam("fim") String fim
+            @Parameter(description = "Data inicial no formato yyyy-MM-dd", required = false) @QueryParam("inicio") String inicio,
+            @Parameter(description = "Data final no formato yyyy-MM-dd", required = false) @QueryParam("fim") String fim
     ) {
 
         LocalDate dataInicio;

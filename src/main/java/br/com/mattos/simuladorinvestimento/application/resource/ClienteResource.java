@@ -6,6 +6,8 @@ import br.com.mattos.simuladorinvestimento.domain.model.ClientePerfilRisco;
 import br.com.mattos.simuladorinvestimento.domain.service.ClienteService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 @Path("/")
 @Consumes("application/json")
 @Produces("application/json")
+@Tag(name = "Cliente", description = "Endpoints relacionados a Cliente")
 public class ClienteResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClienteResource.class);
@@ -33,6 +36,7 @@ public class ClienteResource {
      */
     @GET
     @Path("/perfil-risco/{clienteId}")
+    @Operation(summary = "Consultar Perfil de Risco", description = "Consulta Cliente por id do cliente e retorna o perfil de risco do cliente")
     public ClientePerfilRiscoResponseDTO consultarPerfilRisco(@PathParam("clienteId") Long clienteId) {
         LOGGER.info("Consultando perfil de risco do cliente ID: {}", clienteId);
         ClientePerfilRisco clientePerfilRisco = clienteService.consultarPerfilRiscoCliente(clienteId);

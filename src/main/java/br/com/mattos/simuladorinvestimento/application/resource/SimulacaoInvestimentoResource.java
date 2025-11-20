@@ -12,6 +12,9 @@ import br.com.mattos.simuladorinvestimento.domain.service.SimulacaoService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +23,7 @@ import java.util.List;
 @Path("/")
 @Consumes("application/json")
 @Produces("application/json")
+@Tag(name = "Simulacao Investimento", description = "Endpoints relacionados a Simulação")
 public class SimulacaoInvestimentoResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulacaoInvestimentoResource.class);
@@ -38,7 +42,10 @@ public class SimulacaoInvestimentoResource {
      */
     @POST
     @Path("/simular-investimento")
-    public SimularInvestimentoResponseDTO simular(@Valid SimularInvestimentoRequestDTO request) {
+    @Operation(summary = "Simular Investimento", description = "Simula um investimento para o cliente com base no valor, prazo e tipo de produto")
+    public SimularInvestimentoResponseDTO simular(
+            @Parameter(description = "DTO com dados da simulação", required = true)
+            @Valid SimularInvestimentoRequestDTO request) {
         LOGGER.info("Requisição recebida: simular investimento");
         SimulacaoEntrada dominio = mapper.toDomain(request);
         SimulacaoInvestimento simulacao = simulacaoService.simular(dominio);
@@ -57,6 +64,7 @@ public class SimulacaoInvestimentoResource {
      */
     @GET
     @Path("/simulacoes")
+    @Operation(summary = "Listar Simulações", description = "Lista todas as simulações realizadas")
     public List<SimulacaoListResponseDTO> listar() {
         LOGGER.info("Requisição recebida: listar simulações");
         List<SimulacaoInvestimento> simulacoes = simulacaoService.listarSimulacoes();
@@ -71,6 +79,7 @@ public class SimulacaoInvestimentoResource {
      */
     @GET
     @Path("/simulacoes/por-produto-dia")
+    @Operation(summary = "Listar Simulações por Produto e Dia", description = "Lista simulações agregadas por produto e dia, mostrando quantidade e média de valor final")
     public List<SimulacaoPorProdutoDiaResponseDTO> listarPorProdutoEDia() {
         LOGGER.info("Requisição recebida: listar simulações por produto e dia");
 
@@ -89,7 +98,10 @@ public class SimulacaoInvestimentoResource {
      */
     @GET
     @Path("/investimentos/{clienteId}")
-    public List<SimulacaoInvestimentoClienteDTO> listarSimulacoesPorIdCliente(@PathParam("clienteId") Long idCliente) {
+    @Operation(summary = "Listar Investimentos por Cliente", description = "Lista todas as simulações realizadas por um cliente específico")
+    public List<SimulacaoInvestimentoClienteDTO> listarSimulacoesPorIdCliente(
+            @Parameter(description = "ID do cliente para listar simulações", required = true)
+            @PathParam("clienteId") Long idCliente) {
         LOGGER.info("Requisição recebida: listar simulações");
         List<SimulacaoInvestimento> simulacoes = simulacaoService.listarSimulacoesPorCliente(idCliente);
         LOGGER.info("Retornando {} simulações", simulacoes.size());
