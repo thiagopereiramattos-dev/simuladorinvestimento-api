@@ -26,7 +26,7 @@ public class TelemetriaResponseMapper {
      * @param dataFim    data final do período
      * @return DTO de resposta para API
      */
-    public TelemetriaResponseDTO toResponse(List<Telemetria> resultados, LocalDate dataInicio, LocalDate dataFim) {
+    public TelemetriaResponseDTO toResponse(List<Telemetria> resultados, String dataInicio, String dataFim) {
 
         List<ServicoTelemetriaDTO> servicos = new ArrayList<>();
         for (Telemetria t : resultados) {

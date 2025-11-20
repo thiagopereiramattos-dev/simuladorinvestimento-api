@@ -8,7 +8,7 @@ import java.util.List;
 @Schema(name = "PeriodoTelemetria", description = "Período usado para consulta de telemetria")
 public record PeriodoTelemetriaDTO(
         @Schema(description = "Data inicial do período", example = "2025-01-01")
-        LocalDate inicio,
+        String inicio,
         @Schema(description = "Data final do período", example = "2025-01-31")
-        LocalDate fim
+        String fim
 ) {}

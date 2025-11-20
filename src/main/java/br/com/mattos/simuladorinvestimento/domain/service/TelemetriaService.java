@@ -1,5 +1,6 @@
 package br.com.mattos.simuladorinvestimento.domain.service;
 
+import br.com.mattos.simuladorinvestimento.domain.exception.DataInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.model.Telemetria;
 import br.com.mattos.simuladorinvestimento.domain.repository.TelemetriaRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -35,21 +37,39 @@ public class TelemetriaService {
     /**
      * Consulta a telemetria de serviços dentro do período informado.
      *
-     * @param dataInicio início do período
-     * @param dataFim    fim do período
+     * @param dtInicio data inicio
+     * @param dtFim    data fim
      * @return lista de {@link Telemetria} contendo nome do serviço, quantidade de chamadas
      *         e média do tempo de resposta
      * @throws RuntimeException caso ocorra algum erro durante a consulta
      */
-    public List<Telemetria> consultarTelemetriaServicos(LocalDate dataInicio, LocalDate dataFim) {
-        LOGGER.debug("Iniciando consulta de telemetria dos serviços de {} até {}", dataInicio, dataFim);
+    public List<Telemetria> consultarTelemetriaServicos(String dtInicio, String dtFim) {
+        LOGGER.debug("Iniciando consulta de telemetria dos serviços de {} até {}", dtInicio, dtFim);
+
+        LocalDate dataInicio;
+        LocalDate dataFim;
 
         try {
+
+            if (dtInicio != null && !dtInicio.isBlank()) {
+                dataInicio = LocalDate.parse(dtInicio);
+            } else {
+                dataInicio = LocalDate.now().withDayOfMonth(1);
+            }
+
+            if (dtFim != null && !dtFim.isBlank()) {
+                dataFim = LocalDate.parse(dtFim);
+            } else {
+                dataFim = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+            }
+
             List<Telemetria> resultado = telemetriaRepository.obterTelemetriaServicos(dataInicio, dataFim);
             LOGGER.debug("Consulta de telemetria concluída com {} registros", resultado.size());
             return resultado;
-        } catch (Exception ex) {
-            LOGGER.error("Erro ao consultar telemetria entre {} e {}", dataInicio, dataFim, ex);
+        } catch (DateTimeParseException e) {
+            throw new DataInvalidoException();
+        }catch (Exception ex) {
+            LOGGER.error("Erro ao consultar telemetria entre {} e {}", dtInicio, dtFim, ex);
             throw new RuntimeException("Não foi possível consultar a telemetria dos serviços. Ocorreu um erro interno.", ex);
         }
     }

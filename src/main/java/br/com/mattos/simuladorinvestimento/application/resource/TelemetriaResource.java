@@ -41,8 +41,8 @@ public class TelemetriaResource {
     /**
      * Endpoint para consultar telemetria agregada de serviços no período informado.
      *
-     * @param inicio data inicial do período no formato yyyy-MM-dd
-     * @param fim    data final do período no formato yyyy-MM-dd
+     * @param dataInicio data inicial do período no formato yyyy-MM-dd
+     * @param dataFim    data final do período no formato yyyy-MM-dd
      * @return DTO {@link TelemetriaResponseDTO} contendo lista de serviços com métricas
      */
     @GET
@@ -54,25 +54,9 @@ public class TelemetriaResource {
             @APIResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public TelemetriaResponseDTO consultarTelemetria(
-            @Parameter(description = "Data inicial no formato yyyy-MM-dd", required = false) @QueryParam("inicio") String inicio,
-            @Parameter(description = "Data final no formato yyyy-MM-dd", required = false) @QueryParam("fim") String fim
+            @Parameter(description = "Data inicial no formato yyyy-MM-dd", required = false) @QueryParam("inicio") String dataInicio,
+            @Parameter(description = "Data final no formato yyyy-MM-dd", required = false) @QueryParam("fim") String dataFim
     ) {
-
-        LocalDate dataInicio;
-        LocalDate dataFim;
-
-        if (inicio != null && !inicio.isBlank()) {
-            dataInicio = LocalDate.parse(inicio);
-        } else {
-            dataInicio = LocalDate.now().withDayOfMonth(1);
-        }
-
-        if (fim != null && !fim.isBlank()) {
-            dataFim = LocalDate.parse(fim);
-        } else {
-            dataFim = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
-        }
-
         LOGGER.info("Consultando telemetria de serviços de {} até {}", dataInicio, dataFim);
         List<Telemetria> resultados = telemetriaService.consultarTelemetriaServicos(dataInicio, dataFim);
         return mapper.toResponse(resultados, dataInicio, dataFim);
