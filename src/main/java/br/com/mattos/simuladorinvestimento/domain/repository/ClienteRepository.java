@@ -1,6 +1,7 @@
 package br.com.mattos.simuladorinvestimento.domain.repository;
 
 import br.com.mattos.simuladorinvestimento.domain.model.Cliente;
+import br.com.mattos.simuladorinvestimento.domain.model.ClienteLogin;
 import br.com.mattos.simuladorinvestimento.domain.model.ClientePerfilRisco;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
 
@@ -20,4 +21,7 @@ public interface ClienteRepository {
     List<Cliente> listarTodos();
 
     Optional<ClientePerfilRisco> buscarPerfilRiscoPorId(Long idCliente);
+
+    Optional<ClienteLogin> findByEmail(String email);
+
 }

@@ -1,6 +1,7 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.mapper;
 
 import br.com.mattos.simuladorinvestimento.domain.model.Cliente;
+import br.com.mattos.simuladorinvestimento.domain.model.ClienteLogin;
 import br.com.mattos.simuladorinvestimento.domain.model.ClientePerfilRisco;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ClienteEntity;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.PerfilRiscoEntity;
@@ -11,9 +12,9 @@ import jakarta.enterprise.context.ApplicationScoped;
  * <p>
  * Esta classe oferece métodos para:
  * <ul>
- *     <li>Transformar {@link ClienteEntity} em {@link Cliente} (domínio).</li>
- *     <li>Transformar {@link Cliente} em {@link ClienteEntity} para persistência.</li>
- *     <li>Extrair informações de perfil de risco do cliente em {@link ClientePerfilRisco}.</li>
+ *     <li>Transformar {@link ClienteEntity} em {@link Cliente}.</li>
+ *     <li>Transformar {@link ClienteEntity} em {@link ClientePerfilRisco}.</li>
+ *     <li>Transformar {@link ClienteEntity} em {@link ClienteLogin} para autenticação.</li>
  * </ul>
  * </p>
  */
@@ -38,36 +39,6 @@ public class ClienteMapper {
         );
     }
 
-//    /**
-//     * Converte um objeto de domínio {@link Cliente} em entidade {@link ClienteEntity}.
-//     * <p>
-//     * Observação: o {@link PerfilRiscoEntity} deve ser configurado separadamente,
-//     * geralmente via serviço ou repositório, para manter a consistência do banco.
-//     * </p>
-//     *
-//     * @param cliente objeto de domínio, pode ser {@code null}
-//     * @return entidade JPA correspondente, ou {@code null} se o objeto de domínio for {@code null}
-//     */
-//    public ClienteEntity toEntity(Cliente cliente) {
-//        if (cliente == null) return null;
-//
-//        ClienteEntity entity = new ClienteEntity();
-//        entity.setId(cliente.id() != null ? cliente.id().intValue() : null);
-//        entity.setNome(cliente.nome());
-//        entity.setCpf(cliente.cpf());
-//        entity.setEmail(cliente.email());
-//        // converter o perfilRisco do String para enum
-////        if (cliente.perfilRisco() != null) {
-////            entity.setPerfilRisco(Enum.valueOf(
-////                    br.com.mattos.simuladorinvestimento.domain.enums.PerfilRiscoCliente.class,
-////                    cliente.perfilRisco().toUpperCase()
-////            ));
-////        }
-//        // perfilRisco deve ser setado via PerfilRiscoEntity em outro momento
-//        return entity;
-//    }
-
-
     /**
      * Converte uma entidade {@link ClienteEntity} em {@link ClientePerfilRisco}.
      * <p>
@@ -88,6 +59,26 @@ public class ClienteMapper {
                 perfil.getNome(),
                 perfil.getPontuacao(),
                 perfil.getDescricao()
+        );
+    }
+
+    /**
+     * Converte uma entidade {@link ClienteEntity} em objeto de domínio {@link ClienteLogin}.
+     * <p>
+     * Este mapper é utilizado especificamente para operações de autenticação,
+     * retornando apenas os campos necessários: id, email e senha hash.
+     * </p>
+     *
+     * @param entity entidade do banco de dados, pode ser {@code null}
+     * @return objeto {@link ClienteLogin}, ou {@code null} se a entidade for {@code null}
+     */
+    public ClienteLogin toClienteLogin(ClienteEntity entity) {
+        if (entity == null) return null;
+
+        return new ClienteLogin(
+                entity.getId() != null ? entity.getId().longValue() : null,
+                entity.getEmail(),
+                entity.getSenhaHash()
         );
     }
 }

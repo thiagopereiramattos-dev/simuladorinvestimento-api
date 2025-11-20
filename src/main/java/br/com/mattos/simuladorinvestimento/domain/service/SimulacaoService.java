@@ -54,7 +54,7 @@ public class SimulacaoService {
             Cliente cliente = clienteRepository.buscarPorId(entrada.clienteId())
                     .orElseThrow(() -> {
                         LOGGER.warn("CLiente '{}' não encontrado ", entrada.clienteId());
-                        return new ClienteNaoEncontradoException("Cliente não encontrado: clientId: " + entrada.clienteId());
+                        return new ClienteNaoEncontradoException("Não existe cliente com esse id: " + entrada.clienteId());
                     });
             LOGGER.debug("Cliente encontrado: id={}, nome={}", cliente.id(), cliente.nome());
 

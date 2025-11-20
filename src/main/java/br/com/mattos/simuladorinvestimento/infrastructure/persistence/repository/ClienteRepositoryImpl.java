@@ -1,6 +1,7 @@
 package br.com.mattos.simuladorinvestimento.infrastructure.persistence.repository;
 
 import br.com.mattos.simuladorinvestimento.domain.model.Cliente;
+import br.com.mattos.simuladorinvestimento.domain.model.ClienteLogin;
 import br.com.mattos.simuladorinvestimento.domain.model.ClientePerfilRisco;
 import br.com.mattos.simuladorinvestimento.domain.repository.ClienteRepository;
 import br.com.mattos.simuladorinvestimento.infrastructure.persistence.entity.ClienteEntity;
@@ -67,5 +68,13 @@ public class ClienteRepositoryImpl implements ClienteRepository {
     public Optional<ClientePerfilRisco> buscarPerfilRiscoPorId(Long idCliente) {
         return panacheRepo.findByIdOptional(idCliente)
                 .map(mapper::toClientePerfilRisco);
+    }
+
+    @Override
+    public Optional<ClienteLogin> findByEmail(String email) {
+        return panacheRepo.find("email", email)
+                .firstResultOptional()
+                .map(mapper::toClienteLogin);
+
     }
 }

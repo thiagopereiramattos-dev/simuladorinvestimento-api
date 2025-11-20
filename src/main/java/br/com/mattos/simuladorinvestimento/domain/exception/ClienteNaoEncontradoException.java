@@ -5,7 +5,7 @@ package br.com.mattos.simuladorinvestimento.domain.exception;
  */
 public class ClienteNaoEncontradoException extends DomainException {
 
-    public ClienteNaoEncontradoException(String clienteId) {
-        super("Cliente com ID '" + clienteId + "' não encontrado.");
+    public ClienteNaoEncontradoException(String mensagem) {
+        super(mensagem);
     }
 }

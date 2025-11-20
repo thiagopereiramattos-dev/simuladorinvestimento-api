@@ -42,9 +42,6 @@ public class ClienteEntity {
     @Column(name = "email")
     private String email;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "risco", nullable = false)
-//    private PerfilRiscoCliente perfilRisco;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "perfil_risco_id", nullable = false)
     private PerfilRiscoEntity perfilRisco;

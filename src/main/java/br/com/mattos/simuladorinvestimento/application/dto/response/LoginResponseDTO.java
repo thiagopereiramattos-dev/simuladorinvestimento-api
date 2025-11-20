@@ -1,0 +1,6 @@
+package br.com.mattos.simuladorinvestimento.application.dto.response;
+
+public record LoginResponseDTO(
+        String token,
+        Long clientId
+){}
