@@ -182,7 +182,10 @@ garantindo consistência, rastreabilidade via logs e clareza para o consumidor d
 
 ## Sobre os dados do Insert foram usado esses dados
 ```yaml
-
+Caso queira gerar um banco novo é so criar um novo db na pasta data 
+   -- simuladorinvestimento-api\data
+   -- alterar no properties  quarkus.datasource.jdbc.url=jdbc:sqlite:data/simuladorteste25.db  para o novo nome
+                             quarkus.datasource.jdbc.url=jdbc:sqlite:/opt/app/data/simuladorteste26.db
 Caso de problema no Import dos dados no docker, realizar os insert abaixo:
 
 INSERT INTO tipo_produto (id, nome, descricao) VALUES
