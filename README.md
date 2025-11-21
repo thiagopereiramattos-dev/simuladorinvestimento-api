@@ -182,6 +182,9 @@ garantindo consistência, rastreabilidade via logs e clareza para o consumidor d
 
 ## Sobre os dados do Insert foram usado esses dados
 ```yaml
+
+Caso de problema no Import dos dados no docker, realizar os insert abaixo:
+
 INSERT INTO tipo_produto (id, nome, descricao) VALUES
 (1, 'CDB', 'Certificado de Depósito Bancário'),
 (2, 'LCI', 'Letra de Crédito Imobiliário'),
