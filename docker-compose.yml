@@ -9,7 +9,7 @@ services:
     volumes:
       - ./data:/opt/app/data
     environment:
-      - QUARKUS_PROFILE=docker
+      - QUARKUS_PROFILE:docker
     networks:
       - simulador-network
 
