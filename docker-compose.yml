@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     volumes:
       - ./data:/opt/app/data
+    environment:
+      - QUARKUS_PROFILE=docker
     networks:
       - simulador-network
 
