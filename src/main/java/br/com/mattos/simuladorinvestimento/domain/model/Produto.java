@@ -7,6 +7,5 @@ public record Produto(
         String nome,
         String tipo,
         Double rentabilidade,
-//        String risco
         RiscoProduto risco
 ) {}
