@@ -1,6 +1,7 @@
 package br.com.mattos.simuladorinvestimento.domain.service;
 
 import br.com.mattos.simuladorinvestimento.domain.enums.RiscoProduto;
+import br.com.mattos.simuladorinvestimento.domain.exception.ClienteNaoEncontradoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.PerfilInvalidoException;
 import br.com.mattos.simuladorinvestimento.domain.exception.ProdutoNaoEncontradoException;
 import br.com.mattos.simuladorinvestimento.domain.model.Produto;
@@ -61,6 +62,8 @@ public class ProdutoService {
             LOGGER.debug("Total de produtos encontrados: {}", produtos.size());
             return produtos;
 
+        } catch (PerfilInvalidoException exception) {
+            throw exception;
         } catch (Exception ex) {
             LOGGER.error("Erro ao listar produtos", ex);
             throw new RuntimeException("Não foi possível listar os produtos. Ocorreu um erro interno.", ex);

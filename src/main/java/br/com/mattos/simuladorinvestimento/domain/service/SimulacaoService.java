@@ -120,9 +120,19 @@ public class SimulacaoService {
 
         LOGGER.debug("Iniciando consulta de todas as simulações");
         try {
+
+            Cliente cliente = clienteRepository.buscarPorId(idCLiente)
+                    .orElseThrow(() -> {
+                        LOGGER.warn("CLiente '{}' não encontrado ", idCLiente);
+                        return new ClienteNaoEncontradoException("Não existe cliente com esse id: " + idCLiente);
+                    });
+            LOGGER.debug("Cliente encontrado: id={}, nome={}", cliente.id(), cliente.nome());
+
             List<SimulacaoInvestimento> lista = simulacaoInvestimentoRepository.listarPorCliente(idCLiente);
             LOGGER.debug("Total de simulações retornadas: {}", lista.size());
             return lista;
+        } catch (ClienteNaoEncontradoException exNotFound) {
+            throw exNotFound;
         } catch (Exception ex) {
             LOGGER.error("Erro ao listar simulações", ex);
             throw new RuntimeException("Não foi possível listar as simulações. Ocorreu um erro interno.", ex);

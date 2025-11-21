@@ -59,6 +59,21 @@ public class TelemetriaResource {
     ) {
         LOGGER.info("Consultando telemetria de serviços de {} até {}", dataInicio, dataFim);
         List<Telemetria> resultados = telemetriaService.consultarTelemetriaServicos(dataInicio, dataFim);
-        return mapper.toResponse(resultados, dataInicio, dataFim);
+
+        LocalDate dataInicioConsulta;
+        LocalDate dataFimConsulta;
+        if (dataInicio != null && !dataInicio.isBlank()) {
+            dataInicioConsulta = LocalDate.parse(dataInicio);
+        } else {
+            dataInicioConsulta = LocalDate.now().withDayOfMonth(1);
+        }
+
+        if (dataFim != null && !dataFim.isBlank()) {
+            dataFimConsulta = LocalDate.parse(dataFim);
+        } else {
+            dataFimConsulta = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+        }
+
+        return mapper.toResponse(resultados, dataInicioConsulta.toString(), dataFimConsulta.toString());
     }
 }
