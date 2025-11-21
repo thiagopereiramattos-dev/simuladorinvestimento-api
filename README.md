@@ -100,14 +100,18 @@ id_entidade
 ## Executando Aplicação
 
 ```yaml
-LOCAL
-1° clonar repositório -- git clone https://github.com/thiagopereiramattos-dev/simuladorinvestimento-api.git
+LOCAL (Melhor opção)
+1° clonar repositório ===  git clone --branch develop https://github.com/thiagopereiramattos-dev/simuladorinvestimento-api.git
 cd simuladorinvestimento-api
-2° Executar via Maven: ./mvnw clean quarkus:dev
+   mvn quarkus:dev
+2° Executar
+ abrir o bash e executar === mvn quarkus:dev
+ou via Maven: ./mvnw clean quarkus:dev
 
 O serviço ficará disponível em: http://localhost:8080
 
-DOCKER
+DOCKER (Caso o script de incluir os dados inicias não execute quando rodar pelo docker,
+   precisa fazer o import dos dados iniciais no banco,  no final deste arquivo tem os insert caso precise)
 
 1° Construir a imagem tendo o dockerFile e dockerCompose
    - docker compose build --no-cache
@@ -246,10 +250,5 @@ INSERT INTO perfil_risco (id, nome, pontuacao, descricao) VALUES
    (20, 'Adriano Freitas',     10120230340, 'adriano.freitas@example.com',    3, 'b67e5ebed604a24d9d6ec24e5fee8e0f60c3c3d2ad123dc42589704043ba2817');
 
 ````
-
-## Futuras Melhorias na Aplicação
-
-- Corrigir a autorização por token
-
 ## Autor
 Thiago Pereira de Mattos
