@@ -102,10 +102,11 @@ id_entidade
 ```yaml
 LOCAL (Melhor opção)
 1° clonar repositório ===  git clone --branch develop https://github.com/thiagopereiramattos-dev/simuladorinvestimento-api.git
-cd simuladorinvestimento-api
-   mvn quarkus:dev
+ -->  cd simuladorinvestimento-api
+
 2° Executar
- abrir o bash e executar === mvn quarkus:dev
+ executar o comando === mvn quarkus:dev (estando em simuladorinvestimento-api)
+
 ou via Maven: ./mvnw clean quarkus:dev
 
 O serviço ficará disponível em: http://localhost:8080
