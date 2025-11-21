@@ -6,12 +6,14 @@ import br.com.mattos.simuladorinvestimento.domain.model.AuthResultado;
 import br.com.mattos.simuladorinvestimento.domain.model.ClienteLogin;
 import br.com.mattos.simuladorinvestimento.domain.repository.ClienteRepository;
 import br.com.mattos.simuladorinvestimento.domain.util.HashUtil;
-import io.smallrye.jwt.build.Jwt;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.jwt.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 /**
  * Serviço responsável pelas operações de autenticação.
@@ -20,6 +22,9 @@ import org.slf4j.LoggerFactory;
 public class ClienteAuthService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClienteAuthService.class);
+
+    private static final String CHAVE_FIXA = "01234567890123456789012345678901"; // 32 chars = 256 bits
+
 
     @Inject
     ClienteRepository clienteRepository;
@@ -64,13 +69,11 @@ public class ClienteAuthService {
             }
 
             LOGGER.debug("Gerando token JWT para cliente {}", clienteLogin.id());
+            LOGGER.info("Algoritmo HS256, chave usada: {}",
+                    System.getProperty("smallrye.jwt.sign.key", "key not found"));
 
-            String token = Jwt.issuer("simulador-api")
-                    .upn(clienteLogin.email())
-                    .claim(Claims.sub.name(), clienteLogin.email())
-                    .claim("clienteId", clienteLogin.id())
-                    .sign();
-
+            String token = gerarToken(clienteLogin);
+            LOGGER.info("Token JWT: {}", token);
             LOGGER.info("Autenticação realizada com sucesso para o e-mail {}", email);
 
             return new AuthResultado(clienteLogin.id(), token);
@@ -79,11 +82,26 @@ public class ClienteAuthService {
             throw ex;
         } catch (Exception ex) {
             LOGGER.error("Erro ao autenticar cliente com e-mail {}", email, ex);
-            throw new RuntimeException(
-                    "Não foi possível realizar a autenticação. Ocorreu um erro interno.",
-                    ex
-            );
+            throw new RuntimeException("Não foi possível realizar a autenticação. Ocorreu um erro interno.",ex);
         }
+    }
+
+    /**
+     * Gera token JWT simples usando HS256.
+     *
+     * @param clienteLogin dados do cliente
+     * @return token JWT
+     */
+    private String gerarToken(ClienteLogin clienteLogin) {
+        long validade = 1000 * 60 * 60; // 1 hora
+        return Jwts.builder()
+                .setSubject(clienteLogin.email())
+                .claim("clienteId", clienteLogin.id())
+                .claim("groups", new String[]{"USER"})
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + validade))
+                .signWith(SignatureAlgorithm.HS256, CHAVE_FIXA.getBytes())
+                .compact();
     }
 
 }
